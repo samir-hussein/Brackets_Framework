@@ -2,5 +2,4 @@
     <h1>Welcome In MVC Framework</h1>
     <h2 class="m-0">Let's Start</h2>
     <hr class="uk-divider-small">
-    <a href="/logout">logout</a>
 </div>

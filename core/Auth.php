@@ -9,7 +9,7 @@ class Auth
     {
         $sql = "SELECT * FROM users WHERE email=:email";
         $value = ['email' => $email];
-        if ($result = DataBase::$db->prepare($sql, $value)) {
+        if ($result = DataBase::prepare($sql, $value)) {
 
             foreach ($result as $row) {
                 if (password_verify($password, $row['password'])) {

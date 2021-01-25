@@ -19,7 +19,7 @@ class Application
         $this->router = new Router($this->request, $this->response);
         self::$app = $this;
 
-        if ($config != null) {
+        if (!empty($config['dbName'])) {
             $this->db = new DataBase($config);
         }
     }

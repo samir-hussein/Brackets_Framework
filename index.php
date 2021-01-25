@@ -20,8 +20,7 @@ $config = [
     'dbName' => '',
 ];
 
-// pass $config as a param for Application to connect database
-$app = new Application();
+$app = new Application($config);
 
 $app->router->route('/', 'welcome.php');
 
