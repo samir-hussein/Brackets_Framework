@@ -17,11 +17,11 @@ $config = [
     'serverName' => 'localhost',
     'userName' => 'root',
     'password' => '',
-    'dbName' => 'test',
+    'dbName' => '',
 ];
 
 // pass $config as a param for Application to connect database
-$app = new Application($config);
+$app = new Application();
 
 $app->router->route('/', 'welcome.php');
 
