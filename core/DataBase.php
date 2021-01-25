@@ -16,53 +16,47 @@ class DataBase
 
     public function __construct(array $config)
     {
-        $this->serverName = $config['serverName'];    
-        $this->userName = $config['userName'];    
-        $this->password = $config['password'];    
-        $this->dbName = $config['dbName']; 
+        $this->serverName = $config['serverName'];
+        $this->userName = $config['userName'];
+        $this->password = $config['password'];
+        $this->dbName = $config['dbName'];
         self::$db = $this;
 
-        try{
-            $this->conn = new PDO("mysql:host=".$this->serverName.";dbname=".$this->dbName, $this->userName, $this->password);
+        try {
+            $this->conn = new PDO("mysql:host=" . $this->serverName . ";dbname=" . $this->dbName, $this->userName, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             exit($e->getMessage());
         }
-        
     }
 
     public function countColumn($sql)
-    { 
-        $stmt = $this->conn->prepare($sql); 
-        $stmt->execute(); 
-        $number_of_rows = $stmt->fetchColumn(); 
+    {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $number_of_rows = $stmt->fetchColumn();
         return $number_of_rows;
     }
 
-    public function prepare($sql,array $values = null)
+    public function prepare($sql, array $values = null)
     {
-        try{
+        try {
             $stmt = $this->conn->prepare($sql);
-            if($values !== null){
-                foreach($values as $key => $value)
-                {
+            if ($values !== null) {
+                foreach ($values as $key => $value) {
                     $stmt->bindValue(":$key", $value);
                 }
             }
             $stmt->execute();
-            if(strpos($sql, "SELECT") !== false){
-                if($stmt->rowCount() > 0){
+            if (strpos($sql, "SELECT") !== false) {
+                if ($stmt->rowCount() > 0) {
                     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     return $result;
-                }
-                else return false;
+                } else return false;
             }
             return true;
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             exit($e->getMessage());
         }
     }
 }
-
