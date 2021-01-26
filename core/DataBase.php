@@ -34,8 +34,28 @@ class DataBase
         }
     }
 
-    public static function countColumn($tableName)
+    public static function countRows($tableName = null)
     {
+        $model = get_called_class();
+        if ($model != 'core\DataBase') {
+            $model = new $model;
+
+            $tableName = self::$tableName;
+
+            if (!empty(self::$where) || !empty($orWhere)) {
+                $whereString = self::whereString()['whereString'];
+                $values = self::whereString()['values'];
+                $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName WHERE $whereString");
+                if (!empty($values)) {
+                    foreach ($values as $key => $value) {
+                        $stmt->bindValue(":$key", $value);
+                    }
+                }
+                $stmt->execute();
+                $number_of_rows = $stmt->fetchColumn();
+                return $number_of_rows;
+            }
+        }
         $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName");
         $stmt->execute();
         $number_of_rows = $stmt->fetchColumn();
@@ -69,21 +89,10 @@ class DataBase
         $model = get_called_class();
         if ($model != 'core\DataBase') {
             $model = new $model;
-            $tableName = self::$tableName;
-            $columns = "(";
-            $placeHolders = "(";
-            for ($i = 0; $i < count(self::$columnNames); $i++) {
 
-                if ($i == (count(self::$columnNames) - 1)) {
-                    $columns .= self::$columnNames[$i];
-                    $placeHolders .= ":" . self::$columnNames[$i];
-                } else {
-                    $columns .= self::$columnNames[$i] . ",";
-                    $placeHolders .= ":" . self::$columnNames[$i] . ",";
-                }
-            }
-            $columns .= ")";
-            $placeHolders .= ")";
+            $tableName = self::$tableName;
+            $columns = "(" . implode(',', self::$columnNames) . ")";
+            $placeHolders = "(:" . implode(',:', self::$columnNames) . ")";
 
             $sql = "INSERT INTO $tableName $columns VALUES $placeHolders";
 
@@ -93,18 +102,19 @@ class DataBase
         } else die("You Can Not Access This Method From DataBase Class");
     }
 
-    public static function where($columnName, $sign, $value, $params = null)
+    public static function where($value, $param = null)
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
             $model = new $model;
+            $arr = $value;
 
-            if ($params != null) {
-                foreach ($params as $key => $value) {
-                    $arr = [$columnName, $sign, $key, $value];
+            if ($param != null) {
+                foreach ($param as $key => $value) {
+                    array_pop($arr);
+                    array_push($arr, $key);
+                    array_push($arr, $value);
                 }
-            } else {
-                $arr = [$columnName, $sign, $value];
             }
             array_push(self::$where, $arr);
 
@@ -112,23 +122,66 @@ class DataBase
         } else die("You Can Not Access This Method From DataBase Class");
     }
 
-    public static function orWhere($columnName, $sign, $value, $params = null)
+    public static function orWhere($value, $param = null)
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
             $model = new $model;
-
-            if ($params != null) {
-                foreach ($params as $key => $value) {
-                    $arr = [$columnName, $sign, $key, $value];
+            $arr = $value;
+            if ($param != null) {
+                foreach ($param as $key => $value) {
+                    array_pop($arr);
+                    array_push($arr, $key);
+                    array_push($arr, $value);
                 }
-            } else {
-                $arr = [$columnName, $sign, $value];
             }
             array_push(self::$orWhere, $arr);
 
             return $model;
         } else die("You Can Not Access This Method From DataBase Class");
+    }
+
+    private static function whereString()
+    {
+        $whereString = '';
+        $values = [];
+        $where = self::$where;
+        $orWhere = self::$orWhere;
+
+        if (!empty($where)) {
+            for ($i = 0; $i < count($where); $i++) {
+                if (count($where[$i]) > 3) {
+                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " :" . $where[$i][2];
+
+                    $values[$where[$i][2]] = $where[$i][3];
+                } else {
+                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " '" . $where[$i][2] . "'";
+                }
+                if ($i != (count($where) - 1)) {
+                    $whereString .= ' AND ';
+                }
+            }
+        }
+        if (!empty($orWhere)) {
+            $whereString .= ' OR ';
+            for ($i = 0; $i < count($orWhere); $i++) {
+                if (count($orWhere[$i]) > 3) {
+                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " :" . $orWhere[$i][2];
+
+                    $values[$orWhere[$i][2]] = $orWhere[$i][3];
+                } else {
+                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " '" . $orWhere[$i][2] . "'";
+                }
+                if ($i != (count($orWhere) - 1)) {
+                    $whereString .= ' OR ';
+                }
+            }
+        }
+
+        return [
+            'whereString' => $whereString,
+            'values' => $values
+        ];
     }
 
     public static function orderBy($column, $rearrange = null)
@@ -139,7 +192,7 @@ class DataBase
 
             $arrange = ($rearrange != null) ? $rearrange : '';
 
-            self::$orderBy .= "ORDER BY $column $arrange";
+            self::$orderBy = "ORDER BY $column $arrange";
             return $model;
         } else die("You Can Not Access This Method From DataBase Class");
     }
@@ -164,45 +217,11 @@ class DataBase
     public static function get()
     {
         $tableName = self::$tableName;
-        $whereString = '';
-        $values = [];
-        $where = self::$where;
-        $orWhere = self::$orWhere;
-
-        if (empty($orWhere) && empty($where)) {
+        if (empty(self::$orWhere) && empty(self::$where)) {
             die("You Can Not Access This Method Without Where Or orWhere Method");
         }
-
-        if (!empty($where)) {
-            for ($i = 0; $i < count($where); $i++) {
-                if (count($where[$i]) > 3) {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " :" . $where[$i][2];
-
-                    $values[$where[$i][2]] = $where[$i][3];
-                } else {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " '" . $where[$i][2] . "'";
-                }
-                if ($i != (count($where) - 1)) {
-                    $whereString .= ' AND ';
-                }
-            }
-        }
-        if (!empty($orWhere)) {
-            $whereString .= ' OR ';
-            for ($i = 0; $i < count($orWhere); $i++) {
-                if (count($orWhere[$i]) > 3) {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " :" . $orWhere[$i][2];
-
-                    $values[$orWhere[$i][2]] = $orWhere[$i][3];
-                } else {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " '" . $orWhere[$i][2] . "'";
-                }
-                if ($i != (count($orWhere) - 1)) {
-                    $whereString .= ' OR ';
-                }
-            }
-        }
-
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
         $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : "";
 
         $sql = "SELECT * FROM $tableName WHERE $whereString $orderBy";
@@ -217,45 +236,11 @@ class DataBase
     public static function delete()
     {
         $tableName = self::$tableName;
-        $whereString = '';
-        $values = [];
-        $where = self::$where;
-        $orWhere = self::$orWhere;
-
-        if (empty($orWhere) && empty($where)) {
+        if (empty(self::$orWhere) && empty(self::$where)) {
             die("You Can Not Access This Method Without Where Or orWhere Method");
         }
-
-        if (!empty($where)) {
-            for ($i = 0; $i < count($where); $i++) {
-                if (count($where[$i]) > 3) {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " :" . $where[$i][2];
-
-                    $values[$where[$i][2]] = $where[$i][3];
-                } else {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " '" . $where[$i][2] . "'";
-                }
-                if ($i != (count($where) - 1)) {
-                    $whereString .= ' AND ';
-                }
-            }
-        }
-        if (!empty($orWhere)) {
-            $whereString .= ' OR ';
-            for ($i = 0; $i < count($orWhere); $i++) {
-                if (count($orWhere[$i]) > 3) {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " :" . $orWhere[$i][2];
-
-                    $values[$orWhere[$i][2]] = $orWhere[$i][3];
-                } else {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " '" . $orWhere[$i][2] . "'";
-                }
-                if ($i != (count($orWhere) - 1)) {
-                    $whereString .= ' OR ';
-                }
-            }
-        }
-
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
         $sql = "DELETE FROM $tableName WHERE $whereString";
         if (self::prepare($sql, $values)) {
             self::$where = [];
@@ -264,52 +249,21 @@ class DataBase
         } else return false;
     }
 
-    public static function update($values)
+    public static function update($params)
     {
         $tableName = self::$tableName;
-        $whereString = '';
         $updateString = '';
-        $where = self::$where;
-        $orWhere = self::$orWhere;
 
-        if (empty($orWhere) && empty($where)) {
+        if (empty(self::$orWhere) && empty(self::$where)) {
             die("You Can Not Access This Method Without Where Or orWhere Method");
         }
-
-        if (!empty($where)) {
-            for ($i = 0; $i < count($where); $i++) {
-                if (count($where[$i]) > 3) {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " :" . $where[$i][2];
-
-                    $values[$where[$i][2]] = $where[$i][3];
-                } else {
-                    $whereString .= $where[$i][0] . " " . $where[$i][1] . " '" . $where[$i][2] . "'";
-                }
-                if ($i != (count($where) - 1)) {
-                    $whereString .= ' AND ';
-                }
-            }
-        }
-        if (!empty($orWhere)) {
-            $whereString .= ' OR ';
-            for ($i = 0; $i < count($orWhere); $i++) {
-                if (count($orWhere[$i]) > 3) {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " :" . $orWhere[$i][2];
-
-                    $values[$orWhere[$i][2]] = $orWhere[$i][3];
-                } else {
-                    $whereString .= $orWhere[$i][0] . " " . $orWhere[$i][1] . " '" . $orWhere[$i][2] . "'";
-                }
-                if ($i != (count($orWhere) - 1)) {
-                    $whereString .= ' OR ';
-                }
-            }
-        }
-
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
         $count = 0;
+        $values =  array_merge($values, $params);
 
-        foreach ($values as $key => $value) {
-            if ($count != (count($values) - 1)) {
+        foreach ($params as $key => $value) {
+            if ($count != (count($params) - 1)) {
                 $updateString .= $key . "=:" . $key . ", ";
             } else {
                 $updateString .= $key . "=:" . $key;
