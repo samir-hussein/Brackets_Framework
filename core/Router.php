@@ -10,8 +10,8 @@ class Router
     public $request;
     public $response;
     protected $routes = [];
-    public $layout = "main.php";
-    public $title = "Home";
+    private $layout;
+    private $title;
     public $loadData = [];
 
     public function __construct(Request $request, Response $response)
@@ -50,6 +50,12 @@ class Router
     public function post($path, $callback)
     {
         $this->routes['post'][$path] = $callback;
+    }
+
+    public function any($path, $callback)
+    {
+        $this->routes['post'][$path] = $callback;
+        $this->routes['get'][$path] = $callback;
     }
 
     public function resolve()
@@ -97,6 +103,7 @@ class Router
         } else if (func_num_args() == 1) {
             $view = $args[0];
             $layoutContent = $this->layoutContent($view);
+            $layoutContent = str_replace('{{title}}', $this->title, $layoutContent);
             $viewContent = $this->renderOnlyView($view);
             echo str_replace('{{content}}', $viewContent, $layoutContent);
         } else {

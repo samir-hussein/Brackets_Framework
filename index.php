@@ -22,6 +22,6 @@ $config = [
 
 $app = new Application($config);
 
-$app->route->view('/', 'welcome.php');
+$app->route->setTitle('Home')->setLayout('main.php')->view('/', 'welcome.php');
 
 $app->run();
