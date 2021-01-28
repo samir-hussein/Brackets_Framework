@@ -27,26 +27,24 @@ class Validation
         return $array;
     }
 
-    public static function email($email)
+    public static function validEmail($email)
     {
         $email = self::validateInput($email);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return true;
+            return $email;
         } else {
             return false;
         }
-
     }
 
     public static function url($url)
     {
         $url = self::validateInput($url);
         if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return true;
+            return $url;
         } else {
             return false;
         }
-
     }
 
     public static function number($number)
@@ -70,7 +68,6 @@ class Validation
         } else {
             return self::validateInput($password);
         }
-
     }
 
     public static function file(string $fileName, array $allowedExt, string $dir, string $prefix = '')
@@ -99,15 +96,12 @@ class Validation
                 } else {
                     return 3;
                 }
-
             } else {
                 return 2;
             }
-
         } else {
             return 1;
         }
-
     }
 
     public static function files($fileName, $allowedExt, $dir, $prefix = '')
@@ -138,15 +132,12 @@ class Validation
                     } else {
                         return 3;
                     }
-
                 } else {
                     return 2;
                 }
-
             } else {
                 return 1;
             }
-
         }
         return $images;
     }

@@ -31,6 +31,18 @@ class Router
         return $this;
     }
 
+    public function old($input)
+    {
+        if (isset(Validatore::old()->$input))
+            return Validatore::old()->$input;
+    }
+
+    public function errors($input)
+    {
+        if (isset(Validatore::errors()[$input]))
+            return Validatore::errors()[$input];
+    }
+
     /**
      * Set the value of title
      *
