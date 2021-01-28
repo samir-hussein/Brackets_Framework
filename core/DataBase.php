@@ -99,7 +99,7 @@ class DataBase
             if (self::prepare($sql, $values)) {
                 return true;
             } else return false;
-        } else die("You Can Not Access This Method From DataBase Class");
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     public static function where($value, $param = null)
@@ -119,7 +119,7 @@ class DataBase
             array_push(self::$where, $arr);
 
             return $model;
-        } else die("You Can Not Access This Method From DataBase Class");
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     public static function orWhere($value, $param = null)
@@ -138,7 +138,7 @@ class DataBase
             array_push(self::$orWhere, $arr);
 
             return $model;
-        } else die("You Can Not Access This Method From DataBase Class");
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     private static function whereString()
@@ -194,7 +194,7 @@ class DataBase
 
             self::$orderBy = "ORDER BY $column $arrange";
             return $model;
-        } else die("You Can Not Access This Method From DataBase Class");
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     public static function all()
@@ -211,14 +211,14 @@ class DataBase
                 self::$orderBy = '';
                 return $result;
             }
-        } else die("You Can Not Access This Method From DataBase Class");
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     public static function get()
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
-            die("You Can Not Access This Method Without Where Or orWhere Method");
+            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -237,7 +237,7 @@ class DataBase
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
-            die("You Can Not Access This Method Without Where Or orWhere Method");
+            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -255,7 +255,7 @@ class DataBase
         $updateString = '';
 
         if (empty(self::$orWhere) && empty(self::$where)) {
-            die("You Can Not Access This Method Without Where Or orWhere Method");
+            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];

@@ -11,7 +11,7 @@ class Router
     public $response;
     protected $routes = [];
     public $layout = "main.php";
-    public $title = "";
+    public $title = "Home";
     public $loadData = [];
 
     public function __construct(Request $request, Response $response)
@@ -52,11 +52,6 @@ class Router
         $this->routes['post'][$path] = $callback;
     }
 
-    public function makeView($path, $callback)
-    {
-        $this->routes['get'][$path] = $callback;
-    }
-
     public function resolve()
     {
         $path = $this->request->getPath();
@@ -64,16 +59,19 @@ class Router
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
-            $this->response->setStatusCode("404");
-            return $this->view("/404/index.html");
+            $callback = $this->routes['view'][$path] ?? false;
+            if ($callback === false) {
+                $this->response->setStatusCode("404");
+                return $this->view("/404/index.html");
+            } else {
+                if (is_string($callback) && strpos($callback, '@') == false) {
+                    return $this->view($callback);
+                }
+            }
         }
 
         if (!is_array($callback) && !is_string($callback)) {
             return call_user_func($callback);
-        }
-
-        if (is_string($callback) && strpos($callback, '@') == false) {
-            return $this->view($callback);
         }
 
         if (is_string($callback)) {
@@ -89,11 +87,21 @@ class Router
         return call_user_func($callback, $this, $this->response);
     }
 
-    public function view($view)
+    public function view()
     {
-        $viewContent = $this->renderOnlyView($view);
-        $layoutContent = $this->layoutContent($view);
-        echo str_replace('{{content}}', $viewContent, $layoutContent);
+        $args = func_get_args();
+        if (func_num_args() == 2) {
+            $path = $args[0];
+            $callback = $args[1];
+            $this->routes['view'][$path] = $callback;
+        } else if (func_num_args() == 1) {
+            $view = $args[0];
+            $layoutContent = $this->layoutContent($view);
+            $viewContent = $this->renderOnlyView($view);
+            echo str_replace('{{content}}', $viewContent, $layoutContent);
+        } else {
+            trigger_error('Expecting at least one argument', E_USER_ERROR);
+        }
     }
 
     protected function layoutContent($view)
