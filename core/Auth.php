@@ -18,7 +18,7 @@ class Auth
                     Session::set('status', $row['status']);
                     Session::set('user', $row['email']);
                     if ($remember == true) {
-                        setcookie('remember_user', $row['email'], time() + (86400 * 30));
+                        Cookies::set('remember_user', $row['email'], (86400 * 30));
                     }
                     return true;
                 }
@@ -68,8 +68,7 @@ class Auth
 
     public static function logout()
     {
-        unset($_COOKIE['remember_user']);
-        setcookie("remember_user", "", time() - (86400 * 30));
+        Cookies::remove('remember_user');
         Session::remove('user');
         Session::remove('name');
         Session::remove('id');

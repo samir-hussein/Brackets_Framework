@@ -2,7 +2,6 @@
 
 namespace core;
 
-use core\Application;
 use core\Request;
 
 class Router
@@ -43,43 +42,54 @@ class Router
         return $this;
     }
 
-    public function route($path, $callback = 1)
+    public function get($path, $callback)
     {
-        $this->routes[$path] = $callback;
+        $this->routes['get'][$path] = $callback;
+    }
+
+    public function post($path, $callback)
+    {
+        $this->routes['post'][$path] = $callback;
+    }
+
+    public function makeView($path, $callback)
+    {
+        $this->routes['get'][$path] = $callback;
     }
 
     public function resolve()
     {
         $path = $this->request->getPath();
-        $callback = $this->routes[$path] ?? false;
+        $method = $this->request->getMethod();
+        $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
             $this->response->setStatusCode("404");
-            return $this->renderView("/404/index.html");
+            return $this->view("/404/index.html");
         }
 
-        if ($callback == 1) {
-            $path = explode("/", $path);
-            $length = count($path);
-            $action = $path[$length - 1];
-            $controller = "controllers\\" . $path[$length - 2];
-            $callback = [$controller, $action];
+        if (!is_array($callback) && !is_string($callback)) {
+            return call_user_func($callback);
+        }
+
+        if (is_string($callback) && strpos($callback, '@') == false) {
+            return $this->view($callback);
         }
 
         if (is_string($callback)) {
-            return $this->renderView($callback);
+            $callback = explode('@', $callback);
+            $callback[0] = new $callback[0];
         }
 
         if (is_array($callback)) {
             $controller = new $callback[0];
-            Application::$app->controller = $controller;
             $callback[0] = $controller;
         }
 
-        return call_user_func($callback, $this->request, $this->response);
+        return call_user_func($callback, $this, $this->response);
     }
 
-    public function renderView($view)
+    public function view($view)
     {
         $viewContent = $this->renderOnlyView($view);
         $layoutContent = $this->layoutContent($view);

@@ -8,15 +8,14 @@ class Application
     public static $app;
     public $request;
     public $response;
-    public $router;
-    public $controller = null;
-    public $db;
+    public $route;
+    private $db;
 
     public function __construct($config = null)
     {
         $this->request = new Request();
         $this->response = new Response();
-        $this->router = new Router($this->request, $this->response);
+        $this->route = new Router($this->request, $this->response);
         self::$app = $this;
 
         if (!empty($config['dbName'])) {
@@ -26,6 +25,6 @@ class Application
 
     public function run()
     {
-        echo $this->router->resolve();
+        echo $this->route->resolve();
     }
 }

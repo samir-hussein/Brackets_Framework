@@ -11,7 +11,7 @@ $this->title = "Welcome";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= Application::$app->router->title ?></title>
+    <title><?= Application::$app->route->title ?></title>
     <!-- Bootstrab 4 CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <!-- UIkit CSS -->

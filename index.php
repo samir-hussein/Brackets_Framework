@@ -22,6 +22,6 @@ $config = [
 
 $app = new Application($config);
 
-$app->router->route('/', 'welcome.php');
+$app->route->makeView('/', 'welcome.php');
 
 $app->run();
