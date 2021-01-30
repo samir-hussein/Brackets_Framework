@@ -88,8 +88,8 @@ class Router
         $callback = self::$routes[$method][$path] ?? false;
 
         if ($callback != false) {
-            self::$title = self::$pathInfo[$path]['title'];
-            self::$layout = self::$pathInfo[$path]['layout'];
+            self::$title = (isset(self::$pathInfo[$path]['title'])) ?? self::$pathInfo[$path]['title'];
+            self::$layout = (isset(self::$pathInfo[$path]['layout'])) ?? self::$pathInfo[$path]['layout'];
         }
 
         if ($callback === false) {

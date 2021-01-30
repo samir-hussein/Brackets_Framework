@@ -10,19 +10,13 @@ error_reporting(E_ALL);
 
 require_once 'core/autoload.php';
 
-use core\Router;
-use core\Application;
-
 // Database cofigration
-$config = [
-    'serverName' => 'localhost',
-    'userName' => 'root',
-    'password' => '',
-    'dbName' => '',
-];
+include_once 'DB_Config.php';
+
+use core\Application;
 
 $app = new Application($config);
 
-Router::setTitle('Home')->setLayout('main.php')->view('/', 'welcome.php');
+include_once 'Routes.php';
 
 $app->run();
