@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 
 require_once 'core/autoload.php';
 
+use core\Router;
 use core\Application;
 
 // Database cofigration
@@ -22,6 +23,6 @@ $config = [
 
 $app = new Application($config);
 
-$app->route->setTitle('Home')->setLayout('main.php')->view('/', 'welcome.php');
+Router::setTitle('Home')->setLayout('main.php')->view('/', 'welcome.php');
 
 $app->run();

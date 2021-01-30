@@ -9,15 +9,18 @@ class Router
 
     public $request;
     public $response;
-    protected $routes = [];
-    private $layout;
-    private $title;
+    protected static $routes = [];
+    private static $layout;
+    private static $title;
+    private static $pathInfo = [];
     public $loadData = [];
+    private static $route;
 
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
+        self::$route = $this;
     }
 
     /**
@@ -25,10 +28,10 @@ class Router
      *
      * @return  self
      */
-    public function setLayout($layout)
+    public static function setLayout($layout)
     {
-        $this->layout = $layout;
-        return $this;
+        self::$layout = $layout;
+        return self::$route;
     }
 
     public function old($input)
@@ -48,41 +51,58 @@ class Router
      *
      * @return  self
      */
-    public function setTitle($title)
+    public static function setTitle($title)
     {
-        $this->title = $title;
-        return $this;
+        self::$title = $title;
+        return self::$route;
     }
 
-    public function get($path, $callback)
+    public static function get($path, $callback)
     {
-        $this->routes['get'][$path] = $callback;
+        self::$routes['get'][$path] = $callback;
+        self::$pathInfo[$path]['layout'] = self::$layout;
+        self::$pathInfo[$path]['title'] = self::$title;
+        self::$layout = null;
+        self::$title = null;
     }
 
-    public function post($path, $callback)
+    public static function post($path, $callback)
     {
-        $this->routes['post'][$path] = $callback;
+        self::$routes['post'][$path] = $callback;
     }
 
-    public function any($path, $callback)
+    public static function any($path, $callback)
     {
-        $this->routes['post'][$path] = $callback;
-        $this->routes['get'][$path] = $callback;
+        self::$routes['post'][$path] = $callback;
+        self::$routes['get'][$path] = $callback;
+        self::$pathInfo[$path]['title'] = self::$title;
+        self::$pathInfo[$path]['layout'] = self::$layout;
+        self::$layout = null;
+        self::$title = null;
     }
 
     public function resolve()
     {
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
-        $callback = $this->routes[$method][$path] ?? false;
+        $callback = self::$routes[$method][$path] ?? false;
+
+        if ($callback != false) {
+            self::$title = self::$pathInfo[$path]['title'];
+            self::$layout = self::$pathInfo[$path]['layout'];
+        }
 
         if ($callback === false) {
-            $callback = $this->routes['view'][$path] ?? false;
+            $callback = self::$routes['view'][$path] ?? false;
             if ($callback === false) {
                 $this->response->setStatusCode("404");
-                return $this->view("/404/index.html");
+                self::$layout = 'main.php';
+                self::$title = 'Error 404';
+                return self::view("/404/index.html");
             } else {
                 if (is_string($callback) && strpos($callback, '@') == false) {
+                    self::$title = self::$pathInfo[$path]['title'];
+                    self::$layout = self::$pathInfo[$path]['layout'];
                     return $this->view($callback);
                 }
             }
@@ -105,18 +125,25 @@ class Router
         return call_user_func($callback, $this, $this->response);
     }
 
-    public function view()
+    public static function view()
     {
         $args = func_get_args();
         if (func_num_args() == 2) {
             $path = $args[0];
             $callback = $args[1];
-            $this->routes['view'][$path] = $callback;
+            self::$routes['view'][$path] = $callback;
+            self::$pathInfo[$path]['title'] = self::$title;
+            self::$pathInfo[$path]['layout'] = self::$layout;
+            self::$layout = null;
+            self::$title = null;
         } else if (func_num_args() == 1) {
             $view = $args[0];
-            $layoutContent = $this->layoutContent($view);
-            $layoutContent = str_replace('{{title}}', $this->title, $layoutContent);
-            $viewContent = $this->renderOnlyView($view);
+            $layoutContent = self::$route->layoutContent($view);
+            $layoutContent = str_replace('{{title}}', self::$title, $layoutContent);
+            $viewContent = self::$route->renderOnlyView($view);
+            if (!$layoutContent) {
+                echo str_replace('{{title}}', self::$title, $viewContent);
+            }
             echo str_replace('{{content}}', $viewContent, $layoutContent);
         } else {
             trigger_error('Expecting at least one argument', E_USER_ERROR);
@@ -131,9 +158,12 @@ class Router
         } else {
             $folder = $folder[1];
         }
-        ob_start();
-        include_once __DIR__ . "/../views/$folder/layouts/$this->layout";
-        return ob_get_clean();
+
+        if (!is_null(self::$layout)) {
+            ob_start();
+            include_once __DIR__ . "/../views/$folder/layouts/" . self::$layout;
+            return ob_get_clean();
+        } else return false;
     }
 
     protected function renderOnlyView($view)
