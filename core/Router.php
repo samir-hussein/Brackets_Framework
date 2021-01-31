@@ -73,10 +73,10 @@ class Router
 
     public static function any($path, $callback)
     {
-        self::$routes['post'][$path] = $callback;
-        self::$routes['get'][$path] = $callback;
+        self::$routes['any'][$path] = $callback;
         self::$pathInfo[$path]['title'] = self::$title;
         self::$pathInfo[$path]['layout'] = self::$layout;
+
         self::$layout = null;
         self::$title = null;
     }
@@ -87,9 +87,13 @@ class Router
         $method = $this->request->getMethod();
         $callback = self::$routes[$method][$path] ?? false;
 
+        if ($callback === false) {
+            $callback = self::$routes['any'][$path] ?? false;
+        }
+
         if ($callback != false) {
-            self::$title = (isset(self::$pathInfo[$path]['title'])) ?? self::$pathInfo[$path]['title'];
-            self::$layout = (isset(self::$pathInfo[$path]['layout'])) ?? self::$pathInfo[$path]['layout'];
+            self::$title = (isset(self::$pathInfo[$path]['title'])) ? self::$pathInfo[$path]['title'] : null;
+            self::$layout = (isset(self::$pathInfo[$path]['layout'])) ? self::$pathInfo[$path]['layout'] : null;
         }
 
         if ($callback === false) {
