@@ -159,7 +159,7 @@ class Router
             $folder = $folder[1];
         }
 
-        if (!is_null(self::$layout)) {
+        if (!is_null(self::$layout) && self::$layout !== false) {
             ob_start();
             include_once __DIR__ . "/../views/$folder/layouts/" . self::$layout;
             return ob_get_clean();
@@ -168,8 +168,14 @@ class Router
 
     protected function renderOnlyView($view)
     {
-        ob_start();
-        include_once __DIR__ . "/../views/$view";
-        return ob_get_clean();
+        if (strpos($view, 'Api') !== false) {
+            ob_start();
+            include_once __DIR__ . "/../$view";
+            return ob_get_clean();
+        } else {
+            ob_start();
+            include_once __DIR__ . "/../views/$view";
+            return ob_get_clean();
+        }
     }
 }
