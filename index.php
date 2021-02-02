@@ -17,6 +17,7 @@ use core\Application;
 
 $app = new Application($config);
 
-include_once 'Routes.php';
+include_once 'routes/api.php';
+include_once 'routes/web.php';
 
 $app->run();
