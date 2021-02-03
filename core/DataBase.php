@@ -270,8 +270,8 @@ class DataBase
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
-            $increment = $result[$columnName] - $value;
-            $sql = "UPDATE $tableName SET $columnName=$increment WHERE $whereString";
+            $decrement = $result[$columnName] - $value;
+            $sql = "UPDATE $tableName SET $columnName=$decrement WHERE $whereString";
             if (self::prepare($sql, $values)) {
                 return true;
             } else return false;
