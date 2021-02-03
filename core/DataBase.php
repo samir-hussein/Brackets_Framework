@@ -73,7 +73,10 @@ class DataBase
             }
             $stmt->execute();
             if (strpos($sql, "SELECT") !== false) {
-                if ($stmt->rowCount() > 0) {
+                if ($stmt->rowCount() == 1) {
+                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    return $result[0];
+                } elseif ($stmt->rowCount() > 0) {
                     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     return $result;
                 } else return false;
@@ -218,7 +221,7 @@ class DataBase
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
-            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
+            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -233,11 +236,53 @@ class DataBase
         }
     }
 
+    public static function increment($columnName, $value = 1)
+    {
+        $tableName = self::$tableName;
+        if (empty(self::$orWhere) && empty(self::$where)) {
+            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
+        }
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
+
+        $sql = "SELECT $columnName FROM $tableName WHERE $whereString";
+        if ($result = self::prepare($sql, $values)) {
+            self::$where = [];
+            self::$orWhere = [];
+            $increment = $result[$columnName] + $value;
+            $sql = "UPDATE $tableName SET $columnName=$increment WHERE $whereString";
+            if (self::prepare($sql, $values)) {
+                return true;
+            } else return false;
+        }
+    }
+
+    public static function decrement($columnName, $value = 1)
+    {
+        $tableName = self::$tableName;
+        if (empty(self::$orWhere) && empty(self::$where)) {
+            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
+        }
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
+
+        $sql = "SELECT $columnName FROM $tableName WHERE $whereString";
+        if ($result = self::prepare($sql, $values)) {
+            self::$where = [];
+            self::$orWhere = [];
+            $increment = $result[$columnName] - $value;
+            $sql = "UPDATE $tableName SET $columnName=$increment WHERE $whereString";
+            if (self::prepare($sql, $values)) {
+                return true;
+            } else return false;
+        }
+    }
+
     public static function delete()
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
-            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
+            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -255,7 +300,7 @@ class DataBase
         $updateString = '';
 
         if (empty(self::$orWhere) && empty(self::$where)) {
-            trigger_error('You Can Not Access This Method Without Where Method', E_USER_ERROR);
+            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
