@@ -34,7 +34,7 @@ class DataBase
         }
     }
 
-    public static function countRows($tableName = null)
+    public static function countRows(string $tableName = null): int
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -62,7 +62,7 @@ class DataBase
         return $number_of_rows;
     }
 
-    public static function prepare($sql, array $values = null)
+    public static function prepare(string $sql, array $values = null): array
     {
         try {
             $stmt = self::$conn->prepare($sql);
@@ -87,7 +87,7 @@ class DataBase
         }
     }
 
-    public static function insert($values)
+    public static function insert(array $values): bool
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -105,7 +105,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function where($value, $param = null)
+    public static function where(array $value, array $param = null): object
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -125,7 +125,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function orWhere($value, $param = null)
+    public static function orWhere(array $value, array $param = null): object
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -144,7 +144,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    private static function whereString()
+    private static function whereString(): array
     {
         $whereString = '';
         $values = [];
@@ -188,7 +188,7 @@ class DataBase
         ];
     }
 
-    public static function orderBy($column, $rearrange = null)
+    public static function orderBy(string $column, string $rearrange = null): object
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -201,7 +201,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function all()
+    public static function all(): array
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -218,7 +218,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function find($id)
+    public static function find($id): array
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -233,7 +233,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function get()
+    public static function get(): array
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
@@ -252,7 +252,7 @@ class DataBase
         }
     }
 
-    public static function increment($columnName, $value = 1)
+    public static function increment(string $columnName, int $value = 1): bool
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
@@ -273,7 +273,7 @@ class DataBase
         }
     }
 
-    public static function decrement($columnName, $value = 1)
+    public static function decrement(string $columnName, int $value = 1): bool
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
@@ -294,7 +294,7 @@ class DataBase
         }
     }
 
-    public static function delete()
+    public static function delete(): bool
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
@@ -310,7 +310,7 @@ class DataBase
         } else return false;
     }
 
-    public static function first()
+    public static function first(): array
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {
@@ -330,7 +330,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function update($params)
+    public static function update(array $params): bool
     {
         $tableName = self::$tableName;
         $updateString = '';
