@@ -152,6 +152,7 @@ class DataBase
         $orWhere = self::$orWhere;
 
         if (!empty($where)) {
+            $whereString = 'WHERE ';
             for ($i = 0; $i < count($where); $i++) {
                 if (count($where[$i]) > 3) {
                     $whereString .= $where[$i][0] . " " . $where[$i][1] . " :" . $where[$i][2];
@@ -217,6 +218,21 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
+    public static function find($id)
+    {
+        $model = get_called_class();
+        if ($model != 'core\DataBase') {
+            $model = new $model;
+            $tableName = self::$tableName;
+
+            $sql = "SELECT * FROM $tableName WHERE id=:id";
+            $value = ['id' => $id];
+            if ($result = self::prepare($sql, $value)) {
+                return $result;
+            }
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
+    }
+
     public static function get()
     {
         $tableName = self::$tableName;
@@ -227,7 +243,7 @@ class DataBase
         $values = self::whereString()['values'];
         $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : "";
 
-        $sql = "SELECT * FROM $tableName WHERE $whereString $orderBy";
+        $sql = "SELECT * FROM $tableName $whereString $orderBy";
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
@@ -245,12 +261,12 @@ class DataBase
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
 
-        $sql = "SELECT $columnName FROM $tableName WHERE $whereString";
+        $sql = "SELECT $columnName FROM $tableName $whereString";
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
             $increment = $result[$columnName] + $value;
-            $sql = "UPDATE $tableName SET $columnName=$increment WHERE $whereString";
+            $sql = "UPDATE $tableName SET $columnName=$increment $whereString";
             if (self::prepare($sql, $values)) {
                 return true;
             } else return false;
@@ -266,12 +282,12 @@ class DataBase
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
 
-        $sql = "SELECT $columnName FROM $tableName WHERE $whereString";
+        $sql = "SELECT $columnName FROM $tableName $whereString";
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
             $decrement = $result[$columnName] - $value;
-            $sql = "UPDATE $tableName SET $columnName=$decrement WHERE $whereString";
+            $sql = "UPDATE $tableName SET $columnName=$decrement $whereString";
             if (self::prepare($sql, $values)) {
                 return true;
             } else return false;
@@ -286,12 +302,32 @@ class DataBase
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
-        $sql = "DELETE FROM $tableName WHERE $whereString";
+        $sql = "DELETE FROM $tableName $whereString";
         if (self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
             return true;
         } else return false;
+    }
+
+    public static function first()
+    {
+        $model = get_called_class();
+        if ($model != 'core\DataBase') {
+            $model = new $model;
+            $tableName = self::$tableName;
+            $whereString = (!empty(self::whereString()['whereString'])) ? self::whereString()['whereString'] : '';
+            $values = (!empty(self::whereString()['values'])) ? self::whereString()['values'] : null;
+            $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : '';
+            $sql = "SELECT * FROM $tableName $whereString $orderBy LIMIT 1";
+            // die($sql);
+            if ($result = self::prepare($sql, $values)) {
+                self::$where = [];
+                self::$orWhere = [];
+                self::$orderBy = '';
+                return $result;
+            } else return false;
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
     public static function update($params)
@@ -316,7 +352,7 @@ class DataBase
             $count++;
         }
 
-        $sql = "UPDATE $tableName SET $updateString WHERE $whereString";
+        $sql = "UPDATE $tableName SET $updateString $whereString";
         if (self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
