@@ -14,5 +14,10 @@ class Response
     {
         header("location: $url");
     }
-}
 
+    public function json(array $array, int $code)
+    {
+        $this->setStatusCode($code);
+        echo json_encode($array);
+    }
+}
