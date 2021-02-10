@@ -10,6 +10,7 @@ class Application
     public $response;
     public $route;
     private $db;
+    private $session;
 
     public function __construct($config = null)
     {
@@ -17,6 +18,7 @@ class Application
         $this->response = new Response();
         $this->route = new Router($this->request, $this->response);
         self::$app = $this;
+        $this->session = new Session;
 
         if (!empty($config['dbName'])) {
             $this->db = new DataBase($config);

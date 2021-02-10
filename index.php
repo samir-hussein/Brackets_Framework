@@ -9,6 +9,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'core/autoload.php';
+require_once 'core/Aliases.php';
 
 // Database cofigration
 include_once 'DB_Config.php';
