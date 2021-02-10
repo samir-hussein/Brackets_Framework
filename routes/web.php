@@ -1,5 +1,5 @@
 <?php
 
-use core\Router;
+use App\Router;
 
-Router::setTitle('Home')->setLayout('main.php')->view('/', 'welcome.php');
+Router::setTitle('Welcome')->setLayout('main.php')->view('/', 'welcome.php');

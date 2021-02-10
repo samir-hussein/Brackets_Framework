@@ -1,9 +1,10 @@
 <?php
 
-use core\Router;
-use core\Request;
-use core\Response;
-use core\Validatore;
+use App\Router;
+use App\Request;
+use App\Response;
+use App\Validatore;
+use App\middlewares\run;
 
 $response = new Response;
 $request = new Request;
@@ -48,4 +49,34 @@ function val(string $key)
 {
     global $router;
     return json_decode(json_encode($router->loadData[$key]), false);
+}
+
+function layout(string $layout)
+{
+    global $router;
+    $router::$layout = $layout;
+    return $router;
+}
+
+function title(string $title)
+{
+    global $router;
+    $router::$title = $title;
+    return $router;
+}
+
+function assets(string $path)
+{
+    echo "/assets/$path";
+}
+
+function public_path(string $path)
+{
+    echo "/$path";
+}
+
+function middleware(string $name)
+{
+    $middleware = new run;
+    $middleware->run($name);
 }

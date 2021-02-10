@@ -1,8 +1,8 @@
 <?php
 
-namespace core;
+namespace App;
 
-use core\Request;
+use App\Request;
 
 class Router
 {
@@ -10,17 +10,25 @@ class Router
     public $request;
     public $response;
     protected static $routes = [];
-    private static $layout;
-    private static $title;
+    public static $layout;
+    public static $title;
     private static $pathInfo = [];
     public $loadData = [];
     private static $route;
+    private static $middleware;
+    private static $middlewareArr;
 
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
         self::$route = $this;
+    }
+
+    public static function middleware(string $name)
+    {
+        self::$middleware = $name;
+        return self::$route;
     }
 
     /**
@@ -47,26 +55,61 @@ class Router
 
     public static function get($path, $callback)
     {
+        if (basename(debug_backtrace()[0]['file']) == "api.php") {
+            $path = "/api$path";
+        }
         self::$routes['get'][$path] = $callback;
+        self::$middlewareArr[$path] = self::$middleware;
         self::$pathInfo[$path]['layout'] = self::$layout;
         self::$pathInfo[$path]['title'] = self::$title;
         self::$layout = null;
         self::$title = null;
+        self::$middleware = null;
     }
 
     public static function post($path, $callback)
     {
+        if (basename(debug_backtrace()[0]['file']) == "api.php") {
+            $path = "/api$path";
+        }
+        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['post'][$path] = $callback;
+        self::$middleware = null;
+    }
+
+    public static function delete($path, $callback)
+    {
+        if (basename(debug_backtrace()[0]['file']) == "api.php") {
+            $path = "/api$path";
+        }
+        self::$middlewareArr[$path] = self::$middleware;
+        self::$routes['delete'][$path] = $callback;
+        self::$middleware = null;
+    }
+
+    public static function put($path, $callback)
+    {
+        if (basename(debug_backtrace()[0]['file']) == "api.php") {
+            $path = "/api$path";
+        }
+        self::$middlewareArr[$path] = self::$middleware;
+        self::$routes['put'][$path] = $callback;
+        self::$middleware = null;
     }
 
     public static function any($path, $callback)
     {
+        if (basename(debug_backtrace()[0]['file']) == "api.php") {
+            $path = "/api$path";
+        }
+        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['any'][$path] = $callback;
         self::$pathInfo[$path]['title'] = self::$title;
         self::$pathInfo[$path]['layout'] = self::$layout;
 
         self::$layout = null;
         self::$title = null;
+        self::$middleware = null;
     }
 
     public function resolve()
@@ -92,12 +135,21 @@ class Router
                 self::$title = 'Error 404';
                 return self::view("/404/index.html");
             } else {
-                if (is_string($callback) && strpos($callback, '@') == false) {
+                if (strpos($callback, '@') !== false) {
+                    trigger_error('view() method render view only not making controllers', E_USER_ERROR);
+                } elseif (is_string($callback)) {
+                    if (!is_null(self::$middlewareArr[$path])) {
+                        middleware(self::$middlewareArr[$path]);
+                    }
                     self::$title = self::$pathInfo[$path]['title'];
                     self::$layout = self::$pathInfo[$path]['layout'];
                     return $this->view($callback);
                 }
             }
+        }
+
+        if (!is_null(self::$middlewareArr[$path])) {
+            middleware(self::$middlewareArr[$path]);
         }
 
         if (!is_array($callback) && !is_string($callback)) {
@@ -123,11 +175,13 @@ class Router
         if (func_num_args() == 2) {
             $path = $args[0];
             $callback = $args[1];
+            self::$middlewareArr[$path] = self::$middleware;
             self::$routes['view'][$path] = $callback;
             self::$pathInfo[$path]['title'] = self::$title;
             self::$pathInfo[$path]['layout'] = self::$layout;
             self::$layout = null;
             self::$title = null;
+            self::$middleware = null;
         } else if (func_num_args() == 1) {
             $view = $args[0];
             $layoutContent = self::$route->layoutContent($view);
@@ -160,14 +214,8 @@ class Router
 
     protected function renderOnlyView($view)
     {
-        if (strpos($view, 'Api') !== false) {
-            ob_start();
-            include_once __DIR__ . "/../$view";
-            return ob_get_clean();
-        } else {
-            ob_start();
-            include_once __DIR__ . "/../views/$view";
-            return ob_get_clean();
-        }
+        ob_start();
+        include_once __DIR__ . "/../views/$view";
+        return ob_get_clean();
     }
 }

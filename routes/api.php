@@ -1,3 +1,3 @@
 <?php
 
-use core\Router;
+use App\Router;

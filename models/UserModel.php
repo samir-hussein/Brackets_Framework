@@ -1,8 +1,8 @@
 <?php
 
-namespace models;
+namespace Models;
 
-use core\DataBase;
+use App\DataBase;
 
 class UserModel extends DataBase
 {

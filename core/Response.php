@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace App;
 
 class Response
 {
@@ -12,11 +12,12 @@ class Response
 
     public function redirect(string $url)
     {
-        header("location: $url");
+        exit(header("location: $url"));
     }
 
     public function json(array $array, int $code)
     {
+        header("Content-Type: application/json; charset=UTF-8");
         $this->setStatusCode($code);
         echo json_encode($array);
     }
