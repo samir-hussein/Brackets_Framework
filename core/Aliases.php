@@ -2,6 +2,7 @@
 
 use App\Router;
 use App\Request;
+use App\Session;
 use App\Response;
 use App\Validatore;
 use App\middlewares\run;
@@ -79,4 +80,9 @@ function middleware(string $name)
 {
     $middleware = new run;
     $middleware->run($name);
+}
+
+function flash($key)
+{
+    return Session::getFlash($key);
 }
