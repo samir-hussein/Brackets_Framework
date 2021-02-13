@@ -23,7 +23,7 @@ function redirect(string $url)
 
 function view(string $view)
 {
-    $GLOBALS['router']->view($view);
+    $GLOBALS['router']->renderPage($view);
 }
 
 function old($input)
