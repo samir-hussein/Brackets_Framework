@@ -59,9 +59,9 @@ class Validation
 
     public static function password($password)
     {
-        // must be more than 8 ASCII characters, contain at least one upper case letter, one lower case letter and one digit.
+        // must be more than 8 ASCII characters, contain at least one upper case letter, one lower case letter,one spspecial character of (@#$&*) and one digit.
 
-        $pattern = '/\A(?=[\x20-\x7E]*?[A-Z])(?=[\x20-\x7E]*?[a-z])(?=[\x20-\x7E]*?[0-9])[\x20-\x7E]{8,}\z/';
+        $pattern = '/(?=[\x20-\x7E]*?[A-Z])(?=[\x20-\x7E]*?[a-z])(?=[\x20-\x7E]*?[0-9])(?=[\x20-\x7E]*?[@#$&*])[\x20-\x7E]{8,}/';
 
         if (!preg_match($pattern, $password)) {
             return false;

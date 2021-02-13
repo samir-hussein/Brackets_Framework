@@ -15,6 +15,7 @@ class Router
     private static $middlewareArr = []; // store all middlewares of routes
     private static $pathInfo = []; // store all layouts and titles of routes
     public $loadData = []; // store all data that transfer between controllers and views
+    private static $regx = [];
 
     public function __construct(Request $request, Response $response)
     {
@@ -56,8 +57,23 @@ class Router
         return self::$route;
     }
 
+    public static function urlPattern(string $path)
+    {
+        $path = explode('/', $path);
+        $i = 0;
+        foreach ($path as $item) {
+            if (strpos($item, '{') !== false) {
+                $path[$i] = '*?([\w ]+)';
+            }
+            $i++;
+        }
+        $path = '/' . implode('\/', $path) . '/iu';
+        return $path;
+    }
+
     public static function get(string $path, $callback)
     {
+        $path = self::urlPattern($path);
         if (basename(debug_backtrace()[0]['file']) == "api.php") {
             $path = "/api$path";
         }
@@ -66,6 +82,7 @@ class Router
         self::$middlewareArr[$path] = self::$middleware;
         self::$pathInfo[$path]['layout'] = self::$layout;
         self::$pathInfo[$path]['title'] = self::$title;
+        self::$regx[] = $path;
 
         self::$layout = null;
         self::$title = null;
@@ -74,36 +91,43 @@ class Router
 
     public static function post(string $path, $callback)
     {
+        $path = self::urlPattern($path);
         if (basename(debug_backtrace()[0]['file']) == "api.php") {
             $path = "/api$path";
         }
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['post'][$path] = $callback;
+        self::$regx[] = $path;
         self::$middleware = null;
     }
 
     public static function delete(string $path, $callback)
     {
+        $path = self::urlPattern($path);
         if (basename(debug_backtrace()[0]['file']) == "api.php") {
             $path = "/api$path";
         }
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['delete'][$path] = $callback;
+        self::$regx[] = $path;
         self::$middleware = null;
     }
 
     public static function put(string $path, $callback)
     {
+        $path = self::urlPattern($path);
         if (basename(debug_backtrace()[0]['file']) == "api.php") {
             $path = "/api$path";
         }
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['put'][$path] = $callback;
+        self::$regx[] = $path;
         self::$middleware = null;
     }
 
     public static function any(string $path, $callback)
     {
+        $path = self::urlPattern($path);
         if (basename(debug_backtrace()[0]['file']) == "api.php") {
             $path = "/api$path";
         }
@@ -115,6 +139,7 @@ class Router
         self::$routes['put'][$path] = $callback;
         self::$pathInfo[$path]['title'] = self::$title;
         self::$pathInfo[$path]['layout'] = self::$layout;
+        self::$regx[] = $path;
 
         self::$layout = null;
         self::$title = null;
@@ -137,6 +162,19 @@ class Router
     {
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
+        $ArrayParams = [];
+
+        foreach (self::$regx as $route) {
+            if (preg_match($route, urldecode($path), $url)) {
+                if ($url[0] == urldecode($path)) {
+                    $path = $route;
+                    for ($j = 1; $j < count($url); $j++) {
+                        $ArrayParams[] = $url[$j];
+                    }
+                    break;
+                }
+            }
+        }
 
         if (isset(self::$middlewareArr[$path]) && !is_null(self::$middlewareArr[$path])) {
             middleware(self::$middlewareArr[$path]);
@@ -162,7 +200,7 @@ class Router
         }
 
         if (is_callable($callback)) {
-            return call_user_func($callback);
+            return call_user_func_array($callback, $ArrayParams);
         }
 
         if (is_string($callback)) {
@@ -173,7 +211,10 @@ class Router
         if (is_array($callback))
             $callback[0] = new $callback[0];
 
-        return call_user_func($callback, $this, $this->response);
+        $ArrayParams[] = $this;
+        $ArrayParams[] = $this->response;
+
+        return call_user_func_array($callback, $ArrayParams);
     }
 
     public function renderPage(string $view)
