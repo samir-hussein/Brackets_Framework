@@ -32,7 +32,7 @@ class Session
         if (!isset($_SESSION)) {
             session_start();
         }
-        return $_SESSION[$key];
+        return $_SESSION[$key] ?? null;
     }
 
     public static function remove($key)

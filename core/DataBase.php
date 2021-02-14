@@ -62,7 +62,7 @@ class DataBase
         return $number_of_rows;
     }
 
-    public static function prepare(string $sql, array $values = null): array
+    public static function prepare(string $sql, array $values = null)
     {
         try {
             $stmt = self::$conn->prepare($sql);
@@ -310,7 +310,7 @@ class DataBase
         } else return false;
     }
 
-    public static function first(): array
+    public static function first()
     {
         $model = get_called_class();
         if ($model != 'core\DataBase') {

@@ -5,30 +5,35 @@ namespace App;
 class Auth
 {
 
-    public static function attempt($email, $password, $remember = null)
+    public static function attempt(string $email, string $password, bool $remember = null)
     {
         $sql = "SELECT * FROM users WHERE email=:email";
         $value = ['email' => $email];
         if ($result = DataBase::prepare($sql, $value)) {
+            if (password_verify($password, $result['password'])) {
 
-            foreach ($result as $row) {
-                if (password_verify($password, $row['password'])) {
-                    Session::set('id', $row['id']);
-                    Session::set('name', $row['name']);
-                    Session::set('status', $row['status']);
-                    Session::set('user', $row['email']);
-                    if ($remember == true) {
-                        Cookies::set('remember_user', $row['email'], (86400 * 30));
-                    }
-                    return true;
+                Session::set('id', $result['id']);
+                Session::set('name', $result['name']);
+                Session::set('status', $result['status']);
+                Session::set('user', $result['email']);
+                if ($remember == true) {
+                    Cookies::set('remember_user', $result['email'], (86400 * 30));
+                    Cookies::set('id', $result['id'], (86400 * 30));
+                    Cookies::set('name', $result['name'], (86400 * 30));
+                    Cookies::set('status', $result['status'], (86400 * 30));
                 }
+                return true;
+            } else {
+                return 'password is incorrect';
             }
-        } else return false;
+        } else {
+            return 'user not found';
+        }
     }
 
     public static function user()
     {
-        if (isset($_SESSION['user'])) {
+        if (!is_null(Session::get('user'))) {
             $user = [
                 'email' => $_SESSION['user'],
                 'name' => $_SESSION['name'],
@@ -48,14 +53,17 @@ class Auth
 
     public static function check()
     {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        if (!isset($_COOKIE['remember_user'])) {
-            if (isset($_SESSION['user'])) {
+        if (is_null(Cookies::get('remember_user'))) {
+            if (!is_null(Session::get('user'))) {
                 return true;
             } else return false;
-        } else return true;
+        } else {
+            Session::set('id', Cookies::get('id'));
+            Session::set('name', Cookies::get('name'));
+            Session::set('status', Cookies::get('status'));
+            Session::set('user', Cookies::get('remember_user'));
+            return true;
+        }
     }
 
     public static function is_admin()
@@ -69,6 +77,9 @@ class Auth
     public static function logout()
     {
         Cookies::remove('remember_user');
+        Cookies::remove('id');
+        Cookies::remove('name');
+        Cookies::remove('status');
         Session::remove('user');
         Session::remove('name');
         Session::remove('id');
