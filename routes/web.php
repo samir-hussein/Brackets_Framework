@@ -1,7 +1,7 @@
 <?php
 
-use App\Router;
+use App\Route;
 
-Router::setTitle('Welcome')->setLayout('main.php')->get('/', function () {
+Route::setTitle('Welcome')->setLayout('main.php')->get('/', function () {
     return view('welcome.php');
 });

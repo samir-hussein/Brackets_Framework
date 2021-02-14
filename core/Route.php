@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Router
+class Route
 {
 
     public $request; // instance of class Request

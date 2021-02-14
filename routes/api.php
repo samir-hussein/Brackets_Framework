@@ -1,3 +1,3 @@
 <?php
 
-use App\Router;
+use App\Route;

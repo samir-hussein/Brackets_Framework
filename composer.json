@@ -9,7 +9,13 @@
             "App\\": "core",
             "Controllers\\": "controllers",
             "Models\\": "models"
-        }
+        },
+        "files": [
+            "core/Aliases.php",
+            "DB_Config.php",
+            "routes/web.php",
+            "routes/api.php"
+        ]
     },
     "require": {}
 }

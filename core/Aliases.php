@@ -1,15 +1,17 @@
 <?php
 
-use App\Router;
+use App\Route;
 use App\Request;
 use App\Session;
 use App\Response;
 use App\Validatore;
 use App\middlewares\run;
 
+global $response, $router, $request;
+
 $response = new Response;
 $request = new Request;
-$router = new Router($request, $response);
+$router = new Route($request, $response);
 
 function response()
 {
@@ -23,7 +25,8 @@ function redirect(string $url)
 
 function view(string $view, array $variables = null)
 {
-    $GLOBALS['router']->renderPage($view, $variables);
+    global $router;
+    $router->renderPage($view, $variables);
 }
 
 function old($input)
