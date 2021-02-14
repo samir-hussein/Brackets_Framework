@@ -198,6 +198,8 @@ class Route
             return $this->renderPage("/404/index.html");
         }
 
+        $ArrayParams[] = $this->request->params();
+
         if (is_callable($callback)) {
             return call_user_func_array($callback, $ArrayParams);
         }
@@ -209,9 +211,6 @@ class Route
 
         if (is_array($callback))
             $callback[0] = new $callback[0];
-
-        $ArrayParams[] = $this;
-        $ArrayParams[] = $this->response;
 
         return call_user_func_array($callback, $ArrayParams);
     }

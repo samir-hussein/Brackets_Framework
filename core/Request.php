@@ -14,6 +14,11 @@ class Request
         return substr($path, 0, $position);
     }
 
+    public function params()
+    {
+        return json_decode(json_encode($_REQUEST), false);
+    }
+
     public function getMethod()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
