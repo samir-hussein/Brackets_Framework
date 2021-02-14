@@ -14,8 +14,7 @@ class Router
     protected static $routes = []; // store all routes of the application
     private static $middlewareArr = []; // store all middlewares of routes
     private static $pathInfo = []; // store all layouts and titles of routes
-    public $loadData = []; // store all data that transfer between controllers and views
-    private static $regx = [];
+    private static $regx = []; // store all regx for all routes
 
     public function __construct(Request $request, Response $response)
     {
@@ -217,18 +216,18 @@ class Router
         return call_user_func_array($callback, $ArrayParams);
     }
 
-    public function renderPage(string $view)
+    public function renderPage(string $view, array $variables = null)
     {
-        $layoutContent = $this->layoutContent($view);
+        $layoutContent = self::layoutContent($view);
         $layoutContent = str_replace('{{title}}', self::$title, $layoutContent);
-        $viewContent = $this->viewContent($view);
+        $viewContent = self::viewContent($view, $variables);
         if (!$layoutContent) {
             echo str_replace('{{title}}', self::$title, $viewContent);
         }
         echo str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
-    protected function layoutContent(string $view)
+    protected static function layoutContent(string $view)
     {
         $folder = explode('/', $view);
         if (count($folder) == 1) {
@@ -244,9 +243,11 @@ class Router
         } else return false;
     }
 
-    protected function viewContent(string $view)
+    protected static function viewContent(string $view, array $variables = null)
     {
+        $variables = $variables ?? [];
         ob_start();
+        extract($variables);
         include_once __DIR__ . "/../views/$view";
         return ob_get_clean();
     }

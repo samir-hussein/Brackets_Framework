@@ -21,9 +21,9 @@ function redirect(string $url)
     $GLOBALS['response']->redirect($url);
 }
 
-function view(string $view)
+function view(string $view, array $variables = null)
 {
-    $GLOBALS['router']->renderPage($view);
+    $GLOBALS['router']->renderPage($view, $variables);
 }
 
 function old($input)
@@ -36,20 +36,6 @@ function errors($input)
 {
     if (isset(Validatore::errors()[$input]))
         return Validatore::errors()[$input];
-}
-
-function with(array $array)
-{
-    global $router;
-    foreach ($array as $key => $value)
-        $router->loadData[$key] = $value;
-    return $router;
-}
-
-function val(string $key)
-{
-    global $router;
-    return json_decode(json_encode($router->loadData[$key]), false);
 }
 
 function layout(string $layout)
