@@ -7,11 +7,12 @@ use App\Response;
 use App\Validatore;
 use App\middlewares\run;
 
-global $response, $router, $request;
+global $response, $router, $request, $sessions;
 
 $response = new Response;
 $request = new Request;
 $router = new Route($request, $response);
+$sessions = [];
 
 function response()
 {
@@ -74,4 +75,22 @@ function middleware(string $name)
 function flash($key)
 {
     return Session::getFlash($key);
+}
+
+function startSession(string $name)
+{
+    ob_start();
+}
+
+function endSession(string $name)
+{
+    global $sessions;
+    $sessions[$name] = ob_get_clean();
+    return;
+}
+
+function session(string $name)
+{
+    global $sessions;
+    return $sessions[$name] ?? null;
 }

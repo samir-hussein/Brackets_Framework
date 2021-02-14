@@ -218,9 +218,9 @@ class Route
 
     public function renderPage(string $view, array $variables = null)
     {
+        $viewContent = self::viewContent($view, $variables);
         $layoutContent = self::layoutContent($view);
         $layoutContent = str_replace('{{title}}', self::$title, $layoutContent);
-        $viewContent = self::viewContent($view, $variables);
         if (!$layoutContent) {
             echo str_replace('{{title}}', self::$title, $viewContent);
         }

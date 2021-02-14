@@ -14,8 +14,6 @@
     <!-- My CSS  -->
     <link rel="stylesheet" href="<?= assets('css/style.css') ?>">
     <link rel="stylesheet" href="<?= assets('css/preloader.css') ?>">
-    <!-- JQuery  -->
-    <script src="<?= assets('js/jquery-3.5.1.min.js') ?>"></script>
 </head>
 
 <body>
@@ -35,7 +33,8 @@
     <footer>
 
     </footer>
-
+    <!-- JQuery  -->
+    <script src="<?= assets('js/jquery-3.5.1.min.js') ?>"></script>
     <!-- Bootstrab 4 JS -->
     <script src="<?= assets('js/bootstrap.bundle.min.js') ?>"></script>
     <!-- UIkit JS -->
@@ -49,6 +48,7 @@
             $(".preload").fadeOut("slow");
         });
     </script>
+    <?= session('scripts'); ?>
 </body>
 
 </html>
