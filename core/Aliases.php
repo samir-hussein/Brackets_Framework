@@ -89,8 +89,15 @@ function endSession(string $name)
     return;
 }
 
-function session(string $name)
+function session(string $name, string $value = null)
 {
     global $sessions;
+    if (!is_null($value)) $sessions[$name] = $value;
     return $sessions[$name] ?? null;
+}
+
+function extend(string $path)
+{
+    global $router;
+    $router->setLayout($path);
 }

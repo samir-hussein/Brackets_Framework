@@ -13,7 +13,6 @@ class Route
     private static $middleware; // store page middleware name 
     protected static $routes = []; // store all routes of the application
     private static $middlewareArr = []; // store all middlewares of routes
-    private static $pathInfo = []; // store all layouts and titles of routes
     private static $regx = []; // store all regx for all routes
 
     public function __construct(Request $request, Response $response)
@@ -39,21 +38,9 @@ class Route
      *
      * @return  self
      */
-    public static function setLayout(string $layout)
+    public function setLayout(string $layout)
     {
         self::$layout = $layout;
-        return self::$route;
-    }
-
-    /**
-     * Set the value of title
-     *
-     * @return  self
-     */
-    public static function setTitle(string $title)
-    {
-        self::$title = $title;
-        return self::$route;
     }
 
     public static function urlPattern(string $path)
@@ -79,12 +66,7 @@ class Route
 
         self::$routes['get'][$path] = $callback;
         self::$middlewareArr[$path] = self::$middleware;
-        self::$pathInfo[$path]['layout'] = self::$layout;
-        self::$pathInfo[$path]['title'] = self::$title;
         self::$regx[] = $path;
-
-        self::$layout = null;
-        self::$title = null;
         self::$middleware = null;
     }
 
@@ -136,12 +118,7 @@ class Route
         self::$routes['post'][$path] = $callback;
         self::$routes['delete'][$path] = $callback;
         self::$routes['put'][$path] = $callback;
-        self::$pathInfo[$path]['title'] = self::$title;
-        self::$pathInfo[$path]['layout'] = self::$layout;
         self::$regx[] = $path;
-
-        self::$layout = null;
-        self::$title = null;
         self::$middleware = null;
     }
 
@@ -149,11 +126,6 @@ class Route
     {
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['view'][$path] = $callback;
-        self::$pathInfo[$path]['title'] = self::$title;
-        self::$pathInfo[$path]['layout'] = self::$layout;
-
-        self::$layout = null;
-        self::$title = null;
         self::$middleware = null;
     }
 
@@ -179,9 +151,6 @@ class Route
             middleware(self::$middlewareArr[$path]);
         }
 
-        self::$title = self::$pathInfo[$path]['title'] ?? null;
-        self::$layout = self::$pathInfo[$path]['layout'] ?? null;
-
         if (isset(self::$routes[$method][$path])) {
             $callback = self::$routes[$method][$path];
         } elseif (isset(self::$routes['view'][$path])) {
@@ -193,9 +162,7 @@ class Route
             }
         } else {
             $this->response->setStatusCode("404");
-            self::$layout = 'main.php';
-            self::$title = 'Error 404';
-            return $this->renderPage("/404/index.html");
+            return $this->renderPage("/404/index");
         }
 
         $ArrayParams[] = $this->request->params();
@@ -218,28 +185,19 @@ class Route
     public function renderPage(string $view, array $variables = null)
     {
         $viewContent = self::viewContent($view, $variables);
-        $layoutContent = self::layoutContent($view);
-        $layoutContent = str_replace('{{title}}', self::$title, $layoutContent);
-        if (!$layoutContent) {
-            echo str_replace('{{title}}', self::$title, $viewContent);
+        if (!is_null(self::$layout)) {
+            $layoutContent = self::layoutContent(self::$layout);
+            echo $layoutContent;
+            self::$layout = null;
         }
-        echo str_replace('{{content}}', $viewContent, $layoutContent);
+        echo $viewContent;
     }
 
-    protected static function layoutContent(string $view)
+    protected static function layoutContent(string $path)
     {
-        $folder = explode('/', $view);
-        if (count($folder) == 1) {
-            $folder = '';
-        } else {
-            $folder = $folder[1];
-        }
-
-        if (!is_null(self::$layout)) {
-            ob_start();
-            include_once __DIR__ . "/../views/$folder/layouts/" . self::$layout;
-            return ob_get_clean();
-        } else return false;
+        ob_start();
+        include_once __DIR__ . "/../views/$path.php";
+        return ob_get_clean();
     }
 
     protected static function viewContent(string $view, array $variables = null)
@@ -247,7 +205,7 @@ class Route
         $variables = $variables ?? [];
         ob_start();
         extract($variables);
-        include_once __DIR__ . "/../views/$view";
+        include_once __DIR__ . "/../views/$view.php";
         return ob_get_clean();
     }
 }

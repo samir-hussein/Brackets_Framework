@@ -27,7 +27,7 @@
 <body>
 
 	<main>
-		{{content}}
+		<?= session("content") ?>
 	</main>
 </body>
 
