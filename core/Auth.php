@@ -4,23 +4,30 @@ namespace App;
 
 class Auth
 {
+    private static $table;
+
+    public static function guard(string $name)
+    {
+        self::$table = $name ?? null;
+        return new Auth;
+    }
 
     public static function attempt(string $email, string $password, bool $remember = null)
     {
-        $sql = "SELECT * FROM users WHERE email=:email";
+        $table = self::$table ?? 'users';
+        $sql = "SELECT * FROM $table WHERE email=:email";
         $value = ['email' => $email];
         if ($result = DataBase::prepare($sql, $value)) {
             if (password_verify($password, $result['password'])) {
-
                 Session::set('id', $result['id']);
                 Session::set('name', $result['name']);
-                Session::set('status', $result['status']);
+                Session::set('role', $result['role'] ?? null);
                 Session::set('user', $result['email']);
                 if ($remember == true) {
                     Cookies::set('remember_user', $result['email'], (86400 * 30));
                     Cookies::set('id', $result['id'], (86400 * 30));
                     Cookies::set('name', $result['name'], (86400 * 30));
-                    Cookies::set('status', $result['status'], (86400 * 30));
+                    Cookies::set('role', $result['role'], (86400 * 30));
                 }
                 return true;
             } else {
@@ -38,7 +45,7 @@ class Auth
                 'email' => $_SESSION['user'],
                 'name' => $_SESSION['name'],
                 'id' => $_SESSION['id'],
-                'status' => $_SESSION['status'],
+                'role' => $_SESSION['role'],
             ];
             return json_decode(json_encode($user), FALSE);
         } else return null;
@@ -60,7 +67,7 @@ class Auth
         } else {
             Session::set('id', Cookies::get('id'));
             Session::set('name', Cookies::get('name'));
-            Session::set('status', Cookies::get('status'));
+            Session::set('role', Cookies::get('role'));
             Session::set('user', Cookies::get('remember_user'));
             return true;
         }
@@ -69,7 +76,7 @@ class Auth
     public static function is_admin()
     {
         if (self::user() != null) {
-            if (self::user()->status == 'admin') return true;
+            if (self::user()->role == 'admin') return true;
             else return false;
         } else return false;
     }
@@ -79,10 +86,10 @@ class Auth
         Cookies::remove('remember_user');
         Cookies::remove('id');
         Cookies::remove('name');
-        Cookies::remove('status');
+        Cookies::remove('role');
         Session::remove('user');
         Session::remove('name');
         Session::remove('id');
-        Session::remove('status');
+        Session::remove('role');
     }
 }
