@@ -34,6 +34,27 @@ class DataBase
         }
     }
 
+    private static function run(string $fun, string $columnName): float
+    {
+        $model = get_called_class();
+        if ($model != 'core\DataBase') {
+            $model = new $model;
+
+            $tableName = self::$tableName;
+            $whereString = self::whereString()['whereString'];
+            $values = self::whereString()['values'];
+            $stmt = self::$conn->prepare("SELECT $fun($columnName) FROM $tableName $whereString");
+            if (!empty($values)) {
+                foreach ($values as $key => $value) {
+                    $stmt->bindValue(":$key", $value);
+                }
+            }
+            $stmt->execute();
+            $number_of_rows = $stmt->fetchColumn();
+            return $number_of_rows;
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
+    }
+
     public static function countRows(string $tableName = null): int
     {
         $model = get_called_class();
@@ -42,24 +63,38 @@ class DataBase
 
             $tableName = self::$tableName;
 
-            if (!empty(self::$where) || !empty($orWhere)) {
-                $whereString = self::whereString()['whereString'];
-                $values = self::whereString()['values'];
-                $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName WHERE $whereString");
-                if (!empty($values)) {
-                    foreach ($values as $key => $value) {
-                        $stmt->bindValue(":$key", $value);
-                    }
+            $whereString = self::whereString()['whereString'];
+            $values = self::whereString()['values'];
+            $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName $whereString");
+            if (!empty($values)) {
+                foreach ($values as $key => $value) {
+                    $stmt->bindValue(":$key", $value);
                 }
-                $stmt->execute();
-                $number_of_rows = $stmt->fetchColumn();
-                return $number_of_rows;
             }
+            $stmt->execute();
+            $number_of_rows = $stmt->fetchColumn();
+            return $number_of_rows;
         }
-        $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName");
-        $stmt->execute();
-        $number_of_rows = $stmt->fetchColumn();
-        return $number_of_rows;
+    }
+
+    public static function sum(string $columnName): float
+    {
+        return self::run('SUM', $columnName);
+    }
+
+    public static function avg(string $columnName): float
+    {
+        return self::run('AVG', $columnName);
+    }
+
+    public static function min(string $columnName): float
+    {
+        return self::run('MIN', $columnName);
+    }
+
+    public static function max(string $columnName): float
+    {
+        return self::run('MAX', $columnName);
     }
 
     public static function prepare(string $sql, array $values = null)
