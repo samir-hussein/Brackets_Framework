@@ -34,10 +34,32 @@ class DataBase
         }
     }
 
+    private static function ifTableExists(string $tableName): bool
+    {
+        $result = self::$conn->query("SHOW TABLES LIKE '$tableName'");
+        $result->execute();
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($result) > 0) return true;
+        else return false;
+    }
+
+    public static function createTable(string $tableName, string $query)
+    {
+        if (!self::ifTableExists($tableName)) {
+            $query = "CREATE TABLE $tableName " . $query;
+            try {
+                $stmt = self::$conn->prepare($query);
+                $stmt->execute();
+            } catch (PDOException $e) {
+                exit($e->getMessage());
+            }
+        }
+    }
+
     private static function run(string $fun, string $columnName): float
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
 
             $tableName = self::$tableName;
@@ -58,23 +80,22 @@ class DataBase
     public static function countRows(string $tableName = null): int
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
-
             $tableName = self::$tableName;
-
-            $whereString = self::whereString()['whereString'];
-            $values = self::whereString()['values'];
-            $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName $whereString");
-            if (!empty($values)) {
-                foreach ($values as $key => $value) {
-                    $stmt->bindValue(":$key", $value);
-                }
-            }
-            $stmt->execute();
-            $number_of_rows = $stmt->fetchColumn();
-            return $number_of_rows;
         }
+
+        $whereString = self::whereString()['whereString'];
+        $values = self::whereString()['values'];
+        $stmt = self::$conn->prepare("SELECT COUNT(*) FROM $tableName $whereString");
+        if (!empty($values)) {
+            foreach ($values as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+        }
+        $stmt->execute();
+        $number_of_rows = $stmt->fetchColumn();
+        return $number_of_rows;
     }
 
     public static function sum(string $columnName): float
@@ -125,7 +146,7 @@ class DataBase
     public static function insert(array $values): bool
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
 
             $tableName = self::$tableName;
@@ -143,7 +164,7 @@ class DataBase
     public static function where(array $value, array $param = null): object
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
             $arr = $value;
 
@@ -163,7 +184,7 @@ class DataBase
     public static function orWhere(array $value, array $param = null): object
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
             $arr = $value;
             if ($param != null) {
@@ -226,7 +247,7 @@ class DataBase
     public static function orderBy(string $column, string $rearrange = null): object
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
 
             $arrange = ($rearrange != null) ? $rearrange : '';
@@ -239,7 +260,7 @@ class DataBase
     public static function all(): array
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
             $tableName = self::$tableName;
 
@@ -256,7 +277,7 @@ class DataBase
     public static function find($id): array
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
             $tableName = self::$tableName;
 
@@ -287,11 +308,12 @@ class DataBase
         }
     }
 
-    public static function increment(string $columnName, int $value = 1): bool
+    public static function increment(string $columnName, int $value = 1, string $tableName = null): bool
     {
-        $tableName = self::$tableName;
-        if (empty(self::$orWhere) && empty(self::$where)) {
-            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
+        $model = get_called_class();
+        if ($model != 'App\DataBase') {
+            $model = new $model;
+            $tableName = self::$tableName;
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -308,11 +330,12 @@ class DataBase
         }
     }
 
-    public static function decrement(string $columnName, int $value = 1): bool
+    public static function decrement(string $columnName, int $value = 1, string $tableName = null): bool
     {
-        $tableName = self::$tableName;
-        if (empty(self::$orWhere) && empty(self::$where)) {
-            trigger_error('You Can Not Access This Method Without Where() Method', E_USER_ERROR);
+        $model = get_called_class();
+        if ($model != 'App\DataBase') {
+            $model = new $model;
+            $tableName = self::$tableName;
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
@@ -348,7 +371,7 @@ class DataBase
     public static function first()
     {
         $model = get_called_class();
-        if ($model != 'core\DataBase') {
+        if ($model != 'App\DataBase') {
             $model = new $model;
             $tableName = self::$tableName;
             $whereString = (!empty(self::whereString()['whereString'])) ? self::whereString()['whereString'] : '';

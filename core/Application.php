@@ -11,6 +11,7 @@ class Application
     public $route;
     private $db;
     private $session;
+    private $visits;
 
     public function __construct($config = null)
     {
@@ -22,6 +23,7 @@ class Application
 
         if (!empty($config['dbName'])) {
             $this->db = new DataBase($config);
+            $this->visits = new Visitors();
         }
     }
 
