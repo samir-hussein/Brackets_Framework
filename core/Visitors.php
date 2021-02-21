@@ -12,22 +12,20 @@ class Visitors
 
     private function createTables()
     {
-        $query = "(
-            total_visits BIGINT(20) DEFAULT '0' NOT NULL,
-            daily_visits BIGINT(20) DEFAULT '0' NOT NULL,
-            today INT(11) DEFAULT '0' NOT NULL
-        )";
-        DataBase::createTable('visits', $query);
+        DataBase::createTable('visits', [
+            "total_visits BIGINT(20) DEFAULT '0' NOT NULL",
+            "daily_visits BIGINT(20) DEFAULT '0' NOT NULL",
+            "today INT(11) DEFAULT '0' NOT NULL"
+        ]);
         $response = DataBase::countRows('visits');
         if ($response < 1) {
             $query = "INSERT INTO visits (total_visits,daily_visits,today) VALUES (0,0,0)";
             DataBase::prepare($query);
         }
-        $query = "(
-            id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            visitor_ip VARCHAR(255) NOT NULL
-        )";
-        DataBase::createTable('visitors', $query);
+        DataBase::createTable('visitors', [
+            "id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY",
+            "visitor_ip VARCHAR(255) NOT NULL"
+        ]);
     }
 
     private function checkDateOfDay()

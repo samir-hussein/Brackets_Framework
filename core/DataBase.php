@@ -17,7 +17,7 @@ class DataBase
     protected static $columnNames;
     private static $where = [];
     private static $orWhere = [];
-    private static $orderBy = '';
+    private static $orderBy = null;
 
     public function __construct(array $config)
     {
@@ -43,10 +43,10 @@ class DataBase
         else return false;
     }
 
-    public static function createTable(string $tableName, string $query)
+    public static function createTable(string $tableName, array $query)
     {
         if (!self::ifTableExists($tableName)) {
-            $query = "CREATE TABLE $tableName " . $query;
+            $query = "CREATE TABLE $tableName (" . implode(", ", $query) . ")";
             try {
                 $stmt = self::$conn->prepare($query);
                 $stmt->execute();
@@ -135,7 +135,7 @@ class DataBase
                 } elseif ($stmt->rowCount() > 0) {
                     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     return $result;
-                } else return false;
+                } else return null;
             }
             return true;
         } catch (PDOException $e) {
@@ -148,7 +148,6 @@ class DataBase
         $model = get_called_class();
         if ($model != 'App\DataBase') {
             $model = new $model;
-
             $tableName = self::$tableName;
             $columns = "(" . implode(',', self::$columnNames) . ")";
             $placeHolders = "(:" . implode(',:', self::$columnNames) . ")";
@@ -249,9 +248,7 @@ class DataBase
         $model = get_called_class();
         if ($model != 'App\DataBase') {
             $model = new $model;
-
-            $arrange = ($rearrange != null) ? $rearrange : '';
-
+            $arrange = $rearrange ?? '';
             self::$orderBy = "ORDER BY $column $arrange";
             return $model;
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
@@ -264,11 +261,11 @@ class DataBase
             $model = new $model;
             $tableName = self::$tableName;
 
-            $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : "";
+            $orderBy = self::$orderBy ?? "";
 
             $sql = "SELECT * FROM $tableName $orderBy";
             if ($result = self::prepare($sql)) {
-                self::$orderBy = '';
+                self::$orderBy = null;
                 return $result;
             }
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
@@ -297,13 +294,13 @@ class DataBase
         }
         $whereString = self::whereString()['whereString'];
         $values = self::whereString()['values'];
-        $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : "";
+        $orderBy = self::$orderBy ?? "";
 
         $sql = "SELECT * FROM $tableName $whereString $orderBy";
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
-            self::$orderBy = '';
+            self::$orderBy = null;
             return $result;
         }
     }
@@ -374,15 +371,14 @@ class DataBase
         if ($model != 'App\DataBase') {
             $model = new $model;
             $tableName = self::$tableName;
-            $whereString = (!empty(self::whereString()['whereString'])) ? self::whereString()['whereString'] : '';
+            $whereString = self::whereString()['whereString'];
             $values = (!empty(self::whereString()['values'])) ? self::whereString()['values'] : null;
-            $orderBy = (!empty(self::$orderBy)) ? self::$orderBy : '';
+            $orderBy = self::$orderBy ?? '';
             $sql = "SELECT * FROM $tableName $whereString $orderBy LIMIT 1";
-            // die($sql);
             if ($result = self::prepare($sql, $values)) {
                 self::$where = [];
                 self::$orWhere = [];
-                self::$orderBy = '';
+                self::$orderBy = null;
                 return $result;
             } else return false;
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
