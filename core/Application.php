@@ -12,6 +12,7 @@ class Application
     private $db;
     private $session;
     private $visits;
+    private $paymob;
 
     public function __construct($config = null)
     {
@@ -21,9 +22,13 @@ class Application
         self::$app = $this;
         $this->session = new Session;
 
-        if (!empty($config['dbName'])) {
-            $this->db = new DataBase($config);
+        if (!empty($config['MySql']['dbName'])) {
+            $this->db = new DataBase($config['MySql']);
             $this->visits = new Visitors();
+        }
+
+        if (!empty($config['PayMob']['PayMob_User_Name'])) {
+            $this->paymob = new PayMob($config['PayMob']);
         }
     }
 
