@@ -112,3 +112,16 @@ function token()
 {
     return sha1(bin2hex(random_bytes(10)));
 }
+
+function dd($variable)
+{
+    echo "<pre>";
+    var_dump($variable);
+    echo "</pre>";
+    die;
+}
+
+function obj($variable)
+{
+    return json_decode(json_encode($variable));
+}

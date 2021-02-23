@@ -415,4 +415,36 @@ class DataBase
             return false;
         }
     }
+
+    public static function pagination(int $page, int $records)
+    {
+        $model = get_called_class();
+        if ($model != 'App\DataBase') {
+            $model = new $model;
+            $tableName = self::$tableName;
+            $total_recordes = self::countRows($tableName);
+            $total_pages = ceil($total_recordes / $records);
+            $next = ($page >= $total_pages) ? null : ($page + 1);
+            $previus = ($page > 1) ? ($page - 1) : null;
+            $start = ($page - 1) * $records;
+            $end = $records;
+            $whereString = self::whereString()['whereString'];
+            $values = self::whereString()['values'];
+            $orderBy = self::$orderBy ?? '';
+            $sql = "SELECT * FROM $tableName $whereString $orderBy LIMIT $start,$end";
+            if ($result = self::prepare($sql, $values)) {
+                self::$where = [];
+                self::$orWhere = [];
+                self::$orderBy = null;
+                $response = [
+                    'records' => $result,
+                    'total_recordes' => $total_recordes,
+                    'total_pages' => $total_pages,
+                    'next' => $next,
+                    'previus' => $previus
+                ];
+                return obj($response);
+            } else return null;
+        } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
+    }
 }
