@@ -107,3 +107,8 @@ function config($package, $property)
     global $config;
     return $config[$package][$property];
 }
+
+function token()
+{
+    return sha1(bin2hex(random_bytes(10)));
+}
