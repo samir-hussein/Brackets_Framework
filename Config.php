@@ -11,8 +11,8 @@ $config = [
     ],
 
     'PayMob'   => [
-        'PayMob_User_Name' => 'Samir_hussein274',
-        'PayMob_Password' => 'Sa01127499#',
-        'PayMob_Integration_Id' => '171091',
+        'PayMob_User_Name' => '',
+        'PayMob_Password' => '',
+        'PayMob_Integration_Id' => '',
     ]
 ];
