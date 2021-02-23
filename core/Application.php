@@ -13,6 +13,7 @@ class Application
     private $session;
     private $visits;
     private $paymob;
+    private $TwoCheckOut;
 
     public function __construct($config = null)
     {
@@ -29,6 +30,10 @@ class Application
 
         if (!empty($config['PayMob']['PayMob_User_Name'])) {
             $this->paymob = new PayMob($config['PayMob']);
+        }
+
+        if (!empty($config['2checkout']['merchantCode'])) {
+            $this->TwoCheckOut = new TwoCheckOut($config['2checkout']);
         }
     }
 

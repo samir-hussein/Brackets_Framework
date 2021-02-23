@@ -101,3 +101,9 @@ function extend(string $path)
     global $router;
     $router->setLayout($path);
 }
+
+function config($package, $property)
+{
+    global $config;
+    return $config[$package][$property];
+}
