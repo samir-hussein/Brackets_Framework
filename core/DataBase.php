@@ -438,7 +438,8 @@ class DataBase
                     'total_recordes' => $total_recordes,
                     'total_pages' => $total_pages,
                     'next' => $next,
-                    'previus' => $previus
+                    'previus' => $previus,
+                    'current_page' => $page
                 ];
                 return obj($response);
             } else return null;
