@@ -32,7 +32,7 @@ class Visitors
     {
         $sql = "SELECT today FROM visits";
         if ($response = DataBase::prepare($sql)) {
-            $today = $response['today'];
+            $today = $response->today;
             $day = date('d');
             if ($day != $today) {
                 $sql = "UPDATE visits SET today=$day, daily_visits=0";
@@ -65,7 +65,7 @@ class Visitors
     {
         $sql = "SELECT total_visits FROM visits";
         if ($response = DataBase::prepare($sql)) {
-            return $response['total_visits'];
+            return $response->total_visits;
         }
     }
 
@@ -78,7 +78,7 @@ class Visitors
     {
         $sql = "SELECT daily_visits FROM visits";
         if ($response = DataBase::prepare($sql)) {
-            return $response['daily_visits'];
+            return $response->daily_visits;
         }
     }
 }

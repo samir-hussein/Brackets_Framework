@@ -130,10 +130,10 @@ class DataBase
             $stmt->execute();
             if (strpos($sql, "SELECT") !== false) {
                 if ($stmt->rowCount() == 1) {
-                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
                     return $result[0];
                 } elseif ($stmt->rowCount() > 0) {
-                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
                     return $result;
                 } else return null;
             }
@@ -254,7 +254,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function all(): array
+    public static function all()
     {
         $model = get_called_class();
         if ($model != 'App\DataBase') {
@@ -271,7 +271,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function find($id): array
+    public static function find($id): object
     {
         $model = get_called_class();
         if ($model != 'App\DataBase') {
@@ -286,7 +286,7 @@ class DataBase
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function get(): array
+    public static function get()
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Samir Hussein <samirhussein274@gmail.com>
+ * @author Samir Ebrahim Hussein <samirhussein274@gmail.com>
  */
 
 ini_set('display_errors', 1);

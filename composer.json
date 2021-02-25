@@ -1,8 +1,9 @@
 {
     "name": "vendor/mvc_fromework",
     "authors": [{
-        "name": "samir hussein",
-        "email": "samirhussein274@gmail.com"
+        "name": "Samir Ebrahim Hussein",
+        "email": "samirhussein274@gmail.com",
+        "role": "Developer"
     }],
     "autoload": {
         "psr-4": {

@@ -115,6 +115,11 @@ function token()
 
 function dd($variable)
 {
+    if (is_json($variable)) {
+        header("Content-Type: application/json; charset=UTF-8");
+        echo $variable;
+        die;
+    }
     echo "<pre>";
     var_dump($variable);
     echo "</pre>";
@@ -124,4 +129,12 @@ function dd($variable)
 function obj($variable)
 {
     return json_decode(json_encode($variable));
+}
+
+function is_json($string)
+{
+    if (is_string($string)) {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    } else return false;
 }
