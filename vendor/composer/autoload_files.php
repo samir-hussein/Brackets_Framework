@@ -6,8 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    '627f40d452f8d98a8e3ae2c0d192e2ee' => $baseDir . '/core/Helper_Functions.php',
-    '497ffd11350fe303f5d94d0784b9b2d1' => $baseDir . '/Config.php',
-    '28c2a1ed1b3e3bd1f7026881fb0ca8f2' => $baseDir . '/routes/web.php',
-    'b670c89e413a048f5921dad2462a098e' => $baseDir . '/routes/api.php',
+    'e3be96933ce0d06adc34a8dba8d3d946' => $baseDir . '/core/Helper_Functions.php',
+    '048e3245ad7c43eb4498bffd564e8a4f' => $baseDir . '/Config.php',
+    'a3eb6a156658aeda15ce22acc8655549' => $baseDir . '/routes/web.php',
+    '2e5388f8b5b4d8e9f4c5b2d3524ab9b3' => $baseDir . '/routes/api.php',
 );

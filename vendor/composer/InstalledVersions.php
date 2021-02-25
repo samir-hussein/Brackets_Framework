@@ -29,19 +29,19 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'e2a93cb41b0e4a9508840be27993e013b13b1cb0',
-    'name' => 'samir/mvc_fromework',
+    'reference' => '07b596ffc5f722709de87fb713d13ffc5ac655a1',
+    'name' => 'samir_hussein/mvc_fromework',
   ),
   'versions' => 
   array (
-    'samir/mvc_fromework' => 
+    'samir_hussein/mvc_fromework' => 
     array (
       'pretty_version' => 'dev-main',
       'version' => 'dev-main',
       'aliases' => 
       array (
       ),
-      'reference' => 'e2a93cb41b0e4a9508840be27993e013b13b1cb0',
+      'reference' => '07b596ffc5f722709de87fb713d13ffc5ac655a1',
     ),
   ),
 );
