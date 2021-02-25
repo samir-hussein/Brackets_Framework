@@ -6,19 +6,19 @@
     'aliases' => 
     array (
     ),
-    'reference' => '613a4b863c706b4b36fedc1bd59ecdeae002d8ca',
-    'name' => 'vendor/mvc_fromework',
+    'reference' => 'e2a93cb41b0e4a9508840be27993e013b13b1cb0',
+    'name' => 'samir/mvc_fromework',
   ),
   'versions' => 
   array (
-    'vendor/mvc_fromework' => 
+    'samir/mvc_fromework' => 
     array (
       'pretty_version' => 'dev-main',
       'version' => 'dev-main',
       'aliases' => 
       array (
       ),
-      'reference' => '613a4b863c706b4b36fedc1bd59ecdeae002d8ca',
+      'reference' => 'e2a93cb41b0e4a9508840be27993e013b13b1cb0',
     ),
   ),
 );
