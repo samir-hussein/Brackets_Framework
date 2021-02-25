@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '07b596ffc5f722709de87fb713d13ffc5ac655a1',
+    'reference' => '7634dd09758b16948124c9427c0f29a257bdbdf2',
     'name' => 'samir_hussein/mvc_fromework',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '07b596ffc5f722709de87fb713d13ffc5ac655a1',
+      'reference' => '7634dd09758b16948124c9427c0f29a257bdbdf2',
     ),
   ),
 );

@@ -1,6 +1,8 @@
 {
     "name": "samir_hussein/mvc_fromework",
     "type": "project",
+    "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [{
         "name": "Samir Ebrahim Hussein",
         "email": "samirhussein274@gmail.com",
