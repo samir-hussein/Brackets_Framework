@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'dda00cf0d48b73c2fbe6b1842664547e' => $baseDir . '/core/Aliases.php',
+    '1d636445beb3e749d852d155e6032dac' => $baseDir . '/core/Helper_Functions.php',
     'f2076d854346e59f0c7d4f2adc604066' => $baseDir . '/Config.php',
     '27dc5301bf155eda47655c3417ce77fc' => $baseDir . '/routes/web.php',
     '10e3185a921188ec9ef6bbcadae2802f' => $baseDir . '/routes/api.php',

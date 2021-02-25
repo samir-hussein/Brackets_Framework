@@ -1,5 +1,6 @@
 {
     "name": "vendor/mvc_fromework",
+    "type": "project",
     "authors": [{
         "name": "Samir Ebrahim Hussein",
         "email": "samirhussein274@gmail.com",
@@ -12,7 +13,7 @@
             "Models\\": "models"
         },
         "files": [
-            "core/Aliases.php",
+            "core/Helper_Functions.php",
             "Config.php",
             "routes/web.php",
             "routes/api.php"
