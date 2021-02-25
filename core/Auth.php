@@ -18,20 +18,22 @@ class Auth
         $sql = "SELECT * FROM $table WHERE email=:email";
         $value = ['email' => $email];
         if ($result = DataBase::prepare($sql, $value)) {
-            if (password_verify($password, $result['password'])) {
-                Session::set('id', $result['id']);
-                Session::set('name', $result['name']);
-                Session::set('role', $result['role'] ?? null);
-                Session::set('user', $result['email']);
-                if ($remember == true) {
-                    Cookies::set('remember_user', $result['email'], (86400 * 30));
-                    Cookies::set('id', $result['id'], (86400 * 30));
-                    Cookies::set('name', $result['name'], (86400 * 30));
-                    Cookies::set('role', $result['role'], (86400 * 30));
+            foreach ($result as $row) {
+                if (password_verify($password, $row->password)) {
+                    Session::set('id', $row->id);
+                    Session::set('name', $row->name);
+                    Session::set('role', $row->role ?? null);
+                    Session::set('user', $row->email);
+                    if ($remember == true) {
+                        Cookies::set('remember_user', $row->email, (86400 * 30));
+                        Cookies::set('id', $row->id, (86400 * 30));
+                        Cookies::set('name', $row->name, (86400 * 30));
+                        Cookies::set('role', $row->role, (86400 * 30));
+                    }
+                    return true;
+                } else {
+                    return 'password is incorrect';
                 }
-                return true;
-            } else {
-                return 'password is incorrect';
             }
         } else {
             return 'user not found';

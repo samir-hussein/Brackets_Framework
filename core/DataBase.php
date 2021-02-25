@@ -129,10 +129,7 @@ class DataBase
             }
             $stmt->execute();
             if (strpos($sql, "SELECT") !== false) {
-                if ($stmt->rowCount() == 1) {
-                    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    return $result[0];
-                } elseif ($stmt->rowCount() > 0) {
+                if ($stmt->rowCount() > 0) {
                     $result = $stmt->fetchAll(PDO::FETCH_OBJ);
                     return $result;
                 } else return null;
@@ -281,7 +278,7 @@ class DataBase
             $sql = "SELECT * FROM $tableName WHERE id=:id";
             $value = ['id' => $id];
             if ($result = self::prepare($sql, $value)) {
-                return $result;
+                return $result[0];
             }
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
