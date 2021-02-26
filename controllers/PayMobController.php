@@ -15,7 +15,7 @@ class PayMobController
             'amount_cents' => 150 * 100, //put your price
             'currency' => 'EGP',
             'delivery_needed' => false,
-            'merchant_order_id' => 4, //put order id from your database
+            'merchant_order_id' => 5, //put order id from your database
             'items' => [[ // all items information
                 "name" => "ASC1515",
                 "amount_cents" => 150 * 100,
