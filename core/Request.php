@@ -19,6 +19,7 @@ class Request
         if ($this->getMethod() == 'put' || $this->getMethod() == 'delete') {
             return json_decode(file_get_contents("php://input"));
         }
+        if (isset($_POST['_METHOD'])) unset($_REQUEST['_METHOD']);
         return json_decode(json_encode($_REQUEST), false);
     }
 
