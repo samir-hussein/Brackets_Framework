@@ -160,6 +160,9 @@ class Route
             } elseif (is_string($callback)) {
                 return $this->renderPage($callback);
             }
+        } elseif (isset($_POST['_METHOD']) && isset(self::$routes[$_POST['_METHOD']][$path])) {
+            $method = $_POST['_METHOD'];
+            $callback = self::$routes[$method][$path];
         } else {
             $this->response->setStatusCode("404");
             return $this->renderPage("/404/index");

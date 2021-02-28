@@ -138,3 +138,9 @@ function is_json($string)
         return (json_last_error() == JSON_ERROR_NONE);
     } else return false;
 }
+
+function method(string $method)
+{
+    $method = strtolower($method);
+    return "<input type='hidden' name='_METHOD' value='$method'>";
+}
