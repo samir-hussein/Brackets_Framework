@@ -16,6 +16,9 @@ class Request
 
     public function params()
     {
+        if ($this->getMethod() == 'put' || $this->getMethod() == 'delete') {
+            return json_decode(file_get_contents("php://input"));
+        }
         return json_decode(json_encode($_REQUEST), false);
     }
 
