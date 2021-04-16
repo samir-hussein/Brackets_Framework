@@ -20,7 +20,8 @@ class Request
             return json_decode(file_get_contents("php://input"));
         }
         if (isset($_POST['_METHOD'])) unset($_REQUEST['_METHOD']);
-        return json_decode(json_encode($_REQUEST), false);
+        $params = array_merge($_REQUEST, $_FILES);
+        return json_decode(json_encode($params), false);
     }
 
     public function getMethod()

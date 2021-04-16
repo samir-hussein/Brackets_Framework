@@ -18,6 +18,16 @@ class Validatore
         else return false;
     }
 
+    private static function unique($input, $model)
+    {
+        $column = $input;
+        $input = $_REQUEST[$input];
+        $model = "Models\\" . $model;
+        $response = $model::where([$column, '=', $input])->get();
+        if ($response) return false;
+        else return true;
+    }
+
     private static function image($input)
     {
         $mime = $_FILES[$input]['type'];
@@ -146,6 +156,9 @@ class Validatore
                     if (!array_key_exists($key, self::$errors)) {
                         $flag = false;
                         if (isset($param)) self::$params[$key] = $param;
+                        if ($fun == "unique") {
+                            self::$params[$key] = $key;
+                        }
                         self::$errors[$key] = $fun;
                     }
                 }
@@ -170,7 +183,8 @@ class Validatore
             'date' => 'invalid date format',
             'mime' => 'file extension must be {{val}}',
             'image' => 'image is required',
-            'video' => 'video is required'
+            'video' => 'video is required',
+            'unique' => 'this {{val}} is already exist'
         ];
     }
 

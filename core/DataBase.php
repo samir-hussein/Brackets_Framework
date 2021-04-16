@@ -234,6 +234,9 @@ class DataBase
             }
         }
 
+        self::$where = [];
+        self::$orWhere = [];
+
         return [
             'whereString' => $whereString,
             'values' => $values
@@ -264,11 +267,13 @@ class DataBase
             if ($result = self::prepare($sql)) {
                 self::$orderBy = null;
                 return $result;
+            } else {
+                return null;
             }
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function find($id): object
+    public static function find($id)
     {
         $model = get_called_class();
         if ($model != 'App\DataBase') {
@@ -279,11 +284,13 @@ class DataBase
             $value = ['id' => $id];
             if ($result = self::prepare($sql, $value)) {
                 return $result[0];
+            } else {
+                return null;
             }
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 
-    public static function get()
+    public static function get(array $columns = null)
     {
         $tableName = self::$tableName;
         if (empty(self::$orWhere) && empty(self::$where)) {
@@ -293,12 +300,20 @@ class DataBase
         $values = self::whereString()['values'];
         $orderBy = self::$orderBy ?? "";
 
-        $sql = "SELECT * FROM $tableName $whereString $orderBy";
+        if ($columns != null) {
+            $columns = implode(',', $columns);
+        } else {
+            $columns = '*';
+        }
+
+        $sql = "SELECT $columns FROM $tableName $whereString $orderBy";
         if ($result = self::prepare($sql, $values)) {
             self::$where = [];
             self::$orWhere = [];
             self::$orderBy = null;
             return $result;
+        } else {
+            return null;
         }
     }
 
@@ -377,7 +392,7 @@ class DataBase
                 self::$orWhere = [];
                 self::$orderBy = null;
                 return $result;
-            } else return false;
+            } else return null;
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }
 

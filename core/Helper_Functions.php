@@ -58,12 +58,20 @@ function title(string $title)
 
 function assets(string $path)
 {
-    echo "/assets/$path";
+    if (strpos($_SERVER['DOCUMENT_ROOT'], 'public') !== false) {
+        echo "assets/$path";
+    } else {
+        echo "public/assets/$path";
+    }
 }
 
 function public_path(string $path)
 {
-    echo "/$path";
+    if (strpos($_SERVER['DOCUMENT_ROOT'], 'public') !== false) {
+        echo "$path";
+    } else {
+        echo "public/$path";
+    }
 }
 
 function middleware(string $name)
@@ -80,6 +88,48 @@ function flash($key)
 function startSession(string $name)
 {
     ob_start();
+}
+
+function editRequest($key, $value)
+{
+    global $request;
+    $request = $request->params();
+    $request = (array)$request;
+    $request[$key] = $value;
+    $request = (object)$request;
+    return $request;
+}
+
+function addProperty($obj, $key, $value)
+{
+    $obj = (array)$obj;
+    $obj[$key] = $value;
+    $obj = (object)$obj;
+    return $obj;
+}
+
+function encryptMessage(string $message)
+{
+    $strong = true;
+    $key = openssl_random_pseudo_bytes(10, $strong);
+    $cipher = "aes-128-gcm";
+    if (in_array($cipher, openssl_get_cipher_methods())) {
+        $ivlen = openssl_cipher_iv_length($cipher);
+        $iv = openssl_random_pseudo_bytes($ivlen);
+        $ciphertext = openssl_encrypt($message, $cipher, $key, $options = 0, $iv, $tag);
+        return [
+            'iv' => $iv,
+            'tag' => $tag,
+            'key' => $key,
+            'ciphertext' => $ciphertext
+        ];
+    }
+}
+
+function decryptMessage($message, $key, $iv, $tag)
+{
+    $cipher = "aes-128-gcm";
+    return openssl_decrypt($message, $cipher, $key, $options = 0, $iv, $tag);
 }
 
 function endSession(string $name)
