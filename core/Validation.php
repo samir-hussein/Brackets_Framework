@@ -80,8 +80,7 @@ class Validation
         error 3 => file not moved
          */
         if (!empty($_FILES[$fileName]['name']) || $_FILES[$fileName]['error'] == 1) {
-            $file = $_FILES[$fileName]['name'];
-            $ext = explode('.', $file);
+            $ext = explode('/', $_FILES[$fileName]['type']);
             $ext = strtolower(end($ext));
             if (in_array($ext, $allowedExt)) {
                 $newDir = $dir;
@@ -104,36 +103,41 @@ class Validation
         }
     }
 
-    public static function files($fileName, $allowedExt, $dir, $prefix = '')
+    public static function files($fileName, $fileSize, $allowedExt, $dir, $prefix = '')
     {
         /*
+        fileSize param in bytes
         extenstion array must be in lowercase
         $prefix argument is optional
         error 1 => file name is empty
         error 2 => invalid extension
         error 3 => file not moved
+        error 4 => file size too large
          */
         $images = [];
         for ($i = 0; $i < count($_FILES[$fileName]['name']); $i++) {
             if (!empty($_FILES[$fileName]['name'][$i])) {
-                $file = $_FILES[$fileName]['name'][$i];
-                $ext = explode('.', $file);
+                $ext = explode('/', $_FILES[$fileName]['type'][$i]);
                 $ext = strtolower(end($ext));
-                if (in_array($ext, $allowedExt)) {
-                    $newDir = $dir;
-                    $newName = uniqid(($prefix !== "") ? $prefix : "") . "." . $ext;
-                    $target = $newDir . $newName;
-                    if (move_uploaded_file($_FILES[$fileName]['tmp_name'][$i], $target)) {
-                        $response = [
-                            'name' => $newName,
-                            'ext' => $ext,
-                        ];
-                        $images[] = $response;
+                if ($_FILES[$fileName]['size'][$i] <= $fileSize) {
+                    if (in_array($ext, $allowedExt)) {
+                        $newDir = $dir;
+                        $newName = uniqid(($prefix !== "") ? $prefix : "") . "." . $ext;
+                        $target = $newDir . $newName;
+                        if (move_uploaded_file($_FILES[$fileName]['tmp_name'][$i], $target)) {
+                            $response = [
+                                'name' => $newName,
+                                'ext' => $ext,
+                            ];
+                            $images[] = $response;
+                        } else {
+                            return 3;
+                        }
                     } else {
-                        return 3;
+                        return 2;
                     }
                 } else {
-                    return 2;
+                    return 4;
                 }
             } else {
                 return 1;
