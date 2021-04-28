@@ -21,5 +21,12 @@ $config = [
         'privateKey' => '',
         'publicKey' => '',
         'demo' => true,
+    ],
+
+    'Mail' => [
+        'MAIL_HOST' => 'smtp.example.com',
+        'MAIL_PORT' => 587,
+        'MAIL_USERNAME' => null,
+        'MAIL_PASSWORD' => null,
     ]
 ];

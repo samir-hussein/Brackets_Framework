@@ -14,6 +14,7 @@ class Application
     private $visits;
     private $paymob;
     private $TwoCheckOut;
+    private $mail;
 
     public function __construct($config = null)
     {
@@ -22,6 +23,7 @@ class Application
         $this->route = new Route($this->request, $this->response);
         self::$app = $this;
         $this->session = new Session;
+        $this->mail = new Mail($config['Mail']);
 
         if (!empty($config['MySql']['dbName'])) {
             $this->db = new DataBase($config['MySql']);

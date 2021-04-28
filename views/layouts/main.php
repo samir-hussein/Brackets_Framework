@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= session('title') ?></title>
+    <title><?= _yield('title', 'home') ?></title>
     <!-- Bootstrab 4 CSS -->
     <link rel="stylesheet" href="<?= assets('css/bootstrap.min.css') ?>">
     <!-- UIkit CSS -->
@@ -27,7 +27,7 @@
     </header>
 
     <main>
-        <?= session('content') ?>
+        <?= _yield('content') ?>
     </main>
 
     <footer>
@@ -48,7 +48,7 @@
             $(".preload").fadeOut("slow");
         });
     </script>
-    <?= session('scripts'); ?>
+    <?= _yield('scripts'); ?>
 </body>
 
 </html>

@@ -85,11 +85,6 @@ function flash($key)
     return Session::getFlash($key);
 }
 
-function startSession(string $name)
-{
-    ob_start();
-}
-
 function editRequest($key, $value)
 {
     global $request;
@@ -132,17 +127,27 @@ function decryptMessage($message, $key, $iv, $tag)
     return openssl_decrypt($message, $cipher, $key, $options = 0, $iv, $tag);
 }
 
-function endSession(string $name)
+function section(string $name, string $value = null)
+{
+    if (!is_null($value)) {
+        global $sessions;
+        $sessions[$name] = $value;
+    } else {
+        ob_start();
+    }
+}
+
+function endSection(string $name)
 {
     global $sessions;
     $sessions[$name] = ob_get_clean();
     return;
 }
 
-function session(string $name, string $value = null)
+function _yield(string $name, string $value = null)
 {
     global $sessions;
-    if (!is_null($value)) $sessions[$name] = $value;
+    if (!is_null($value) && !isset($sessions[$name])) $sessions[$name] = $value;
     return $sessions[$name] ?? null;
 }
 
