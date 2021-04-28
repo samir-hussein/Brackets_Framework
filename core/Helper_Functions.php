@@ -194,3 +194,9 @@ function method(string $method)
     $method = strtolower($method);
     return "<input type='hidden' name='_METHOD' value='$method'>";
 }
+
+function back()
+{
+    if (isset($_SERVER['HTTP_REFERER']))
+        header("location: " . $_SERVER['HTTP_REFERER']);
+}

@@ -9,6 +9,6 @@ class Guest implements Middlewares
     public function boot()
     {
         if (Auth::check())
-            return redirect('/login');
+            return redirect('/');
     }
 }
