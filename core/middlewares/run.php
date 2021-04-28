@@ -9,7 +9,8 @@ class run
     public function __construct()
     {
         $this->providers = [
-            'auth' => new Authentication
+            'auth' => new Authentication,
+            'guest' => new Guest,
         ];
     }
 
