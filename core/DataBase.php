@@ -187,6 +187,11 @@ class DataBase
         echo "FOREIGN KEY ($column1) REFERENCES $tableName($column2) ON DELETE $ondelete ON UPDATE $onupdate,";
     }
 
+    public static function unique($column)
+    {
+        echo "UNIQUE ($column),";
+    }
+
     public static function id($name = null)
     {
         $name = $name ?? 'id';

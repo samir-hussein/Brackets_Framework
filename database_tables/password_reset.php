@@ -7,4 +7,6 @@ DataBase::createTable('password_reset', function ($table) {
     $table->String('email');
     $table->String('token');
     $table->timestamp('expire_at');
+    $table->unique('email');
+    $table->unique('token');
 });

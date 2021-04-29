@@ -7,7 +7,7 @@ $config = [
         'serverName' => 'localhost',
         'userName'   => 'root',
         'password'   => '',
-        'dbName'     => 'testdata',
+        'dbName'     => '',
     ],
 
     'PayMob'   => [
