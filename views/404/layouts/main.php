@@ -27,7 +27,7 @@
 <body>
 
 	<main>
-		<?= session("content") ?>
+		<?= _yield("content") ?>
 	</main>
 </body>
 

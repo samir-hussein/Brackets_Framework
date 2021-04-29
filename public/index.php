@@ -14,4 +14,6 @@ use App\Application;
 
 $app = new Application($config);
 
+require_once '../database_tables/run.php';
+
 $app->run();

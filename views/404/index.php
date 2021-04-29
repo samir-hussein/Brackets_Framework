@@ -1,5 +1,5 @@
 <?php extend('404/layouts/main') ?>
-<?php startSession('content') ?>
+<?php section('content') ?>
 <div id="notfound">
 	<div class="notfound">
 		<div class="notfound-404">
@@ -10,4 +10,4 @@
 		<a href="/">Go To Homepage</a>
 	</div>
 </div>
-<?php endSession('content') ?>
+<?php endSection('content') ?>

@@ -11,6 +11,7 @@ class run
         $this->providers = [
             'auth' => new Authentication,
             'guest' => new Guest,
+            'verifed' => new Verifed,
         ];
     }
 

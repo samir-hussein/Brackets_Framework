@@ -20,19 +20,21 @@ class Auth
         if ($result = DataBase::prepare($sql, $value)) {
             foreach ($result as $row) {
                 if (password_verify($password, $row->password)) {
-                    Session::set('id', $row->id);
-                    Session::set('name', $row->name);
-                    Session::set('role', $row->role ?? null);
-                    Session::set('email', $row->email);
-                    Session::set('user', $row->email);
-                    Session::set('image', $row->image);
+                    $row = (array) $row;
+                    unset($row['password']);
+                    Session::set('user', array_keys($row));
+                    foreach ($row as $key => $value) {
+                        if ($key != 'password') {
+                            Session::set($key, $value);
+                        }
+                    }
                     if ($remember == true) {
-                        Cookies::set('remember_user', $row->email, (86400 * 30));
-                        Cookies::set('id', $row->id, (86400 * 30));
-                        Cookies::set('name', $row->name, (86400 * 30));
-                        Cookies::set('email', $row->email, (86400 * 30));
-                        Cookies::set('image', $row->image, (86400 * 30));
-                        Cookies::set('role', $row->role, (86400 * 30));
+                        foreach ($row as $key => $value) {
+                            if ($key != 'password') {
+                                Cookies::set($key, $value, (86400 * 30));
+                            }
+                        }
+                        Cookies::set('remember_user', json_encode($row), (86400 * 30));
                     }
                     return true;
                 } else {
@@ -47,13 +49,10 @@ class Auth
     public static function user()
     {
         if (!is_null(Session::get('user'))) {
-            $user = [
-                'email' => $_SESSION['email'],
-                'image' => $_SESSION['image'],
-                'name' => $_SESSION['name'],
-                'id' => $_SESSION['id'],
-                'role' => $_SESSION['role'],
-            ];
+            $user = [];
+            foreach (Session::get('user') as $value) {
+                $user[$value] = $_SESSION[$value];
+            }
             return json_decode(json_encode($user), FALSE);
         } else return null;
     }
@@ -67,17 +66,18 @@ class Auth
 
     public static function check()
     {
-        if (is_null(Cookies::get('remember_user'))) {
-            if (!is_null(Session::get('user'))) {
+        if (is_null(Session::get('user'))) {
+            if (is_null(Cookies::get('remember_user'))) {
+                return false;
+            } else {
+                $user = array_keys(json_decode(Cookies::get('remember_user'), true));
+                foreach ($user as $value) {
+                    Session::set($value, Cookies::get($value));
+                }
+                Session::set('user', $user);
                 return true;
-            } else return false;
+            }
         } else {
-            Session::set('id', Cookies::get('id'));
-            Session::set('image', Cookies::get('image'));
-            Session::set('name', Cookies::get('name'));
-            Session::set('email', Cookies::get('email'));
-            Session::set('role', Cookies::get('role'));
-            Session::set('user', Cookies::get('remember_user'));
             return true;
         }
     }
@@ -90,19 +90,21 @@ class Auth
         } else return false;
     }
 
+    public static function is_verified()
+    {
+        if (self::user() != null) {
+            if (is_null(self::user()->email_verifed_at)) return false;
+            else return true;
+        } else return null;
+    }
+
     public static function logout()
     {
+        foreach (Session::get('user') as $value) {
+            Cookies::remove($value);
+            Session::remove($value);
+        }
         Cookies::remove('remember_user');
-        Cookies::remove('id');
-        Cookies::remove('name');
-        Cookies::remove('image');
-        Cookies::remove('role');
-        Cookies::remove('email');
-        Session::remove('email');
         Session::remove('user');
-        Session::remove('image');
-        Session::remove('name');
-        Session::remove('id');
-        Session::remove('role');
     }
 }

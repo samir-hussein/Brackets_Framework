@@ -27,7 +27,7 @@ class Application
 
         if (!empty($config['MySql']['dbName'])) {
             $this->db = new DataBase($config['MySql']);
-            // $this->visits = new Visitors();
+            $this->visits = new Visitors();
         }
 
         if (!empty($config['PayMob']['PayMob_User_Name'])) {
