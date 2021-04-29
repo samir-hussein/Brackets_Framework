@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Database\DataBase;
+
 class Visitors
 {
     public function __construct()
@@ -22,10 +24,8 @@ class Visitors
     private function checkDateOfDay()
     {
         $sql = "SELECT today FROM visits";
-        if ($response = DataBase::prepare($sql)) {
-            foreach ($response as $row) {
-                $today = $row->today;
-            }
+        if ($response = DataBase::prepare($sql)[0]) {
+            $today = $response->today;
             $day = date('d');
             if ($day != $today) {
                 $sql = "UPDATE visits SET today=$day, daily_visits=0";

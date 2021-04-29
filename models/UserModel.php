@@ -2,9 +2,9 @@
 
 namespace Models;
 
-use App\DataBase;
+use App\Database\Eloquent;
 
-class UserModel extends DataBase
+class UserModel extends Eloquent
 {
     public function __construct()
     {

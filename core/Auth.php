@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Database\DataBase;
+
 class Auth
 {
     private static $table;

@@ -14,8 +14,4 @@ use App\Application;
 
 $app = new Application($config);
 
-if (!empty($config['MySql']['dbName'])) {
-    require_once '../database_tables/run.php';
-}
-
 $app->run();

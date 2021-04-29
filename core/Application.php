@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\Database\Schema;
+use App\Database\DataBase;
+use App\Database_Tables\Migrations;
+
 class Application
 {
 
@@ -27,6 +31,8 @@ class Application
 
         if (!empty($config['MySql']['dbName'])) {
             $this->db = new DataBase($config['MySql']);
+            new Schema();
+            new Migrations();
             $this->visits = new Visitors();
         }
 
