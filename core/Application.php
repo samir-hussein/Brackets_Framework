@@ -13,12 +13,6 @@ class Application
     public $request;
     public $response;
     public $route;
-    private $db;
-    private $session;
-    private $visits;
-    private $paymob;
-    private $TwoCheckOut;
-    private $mail;
 
     public function __construct($config = null)
     {
@@ -26,22 +20,22 @@ class Application
         $this->response = new Response();
         $this->route = new Route($this->request, $this->response);
         self::$app = $this;
-        $this->session = new Session;
-        $this->mail = new Mail($config['Mail']);
+        new Session;
+        new Mail($config['Mail']);
 
         if (!empty($config['MySql']['dbName'])) {
-            $this->db = new DataBase($config['MySql']);
+            new DataBase($config['MySql']);
             new Schema();
             new Migrations();
-            $this->visits = new Visitors();
+            new Visitors();
         }
 
         if (!empty($config['PayMob']['PayMob_User_Name'])) {
-            $this->paymob = new PayMob($config['PayMob']);
+            new PayMob($config['PayMob']);
         }
 
         if (!empty($config['2checkout']['merchantCode'])) {
-            $this->TwoCheckOut = new TwoCheckOut($config['2checkout']);
+            new TwoCheckOut($config['2checkout']);
         }
     }
 

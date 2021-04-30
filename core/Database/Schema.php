@@ -8,13 +8,14 @@ use PDOException;
 class Schema extends DataBase
 {
     private static $instance;
+    private static $query = [];
 
     public function __construct()
     {
         self::$instance = $this;
     }
 
-    private static function ifTableExists(string $tableName): bool
+    public static function hasTable(string $tableName): bool
     {
         $result = self::$conn->query("SHOW TABLES LIKE '$tableName'");
         $result->execute();
@@ -23,7 +24,7 @@ class Schema extends DataBase
         else return false;
     }
 
-    private static function ifColumnExists(string $tableName, string $columnName): bool
+    public static function hasColumn(string $tableName, string $columnName): bool
     {
         $myschema = config('MySql', 'dbName');
         $result = self::$conn->query("SELECT * FROM information_schema.COLUMNS 
@@ -35,74 +36,63 @@ class Schema extends DataBase
         else return false;
     }
 
-    public static function createTable(string $tableName, callable $callback)
+    public static function create(string $tableName, callable $callback)
     {
-        if (!self::ifTableExists($tableName)) {
+        if (!self::hasTable($tableName)) {
             $table = self::$instance;
-            ob_start();
             call_user_func($callback, $table);
-            $query = ob_get_clean();
-            $query = substr($query, 0, -1);
-            $query = "CREATE TABLE $tableName ($query)";
+            $query = self::$query;
+            $query = "CREATE TABLE $tableName (" . implode(',', $query) . ")";
             try {
                 $stmt = self::$conn->prepare($query);
                 $stmt->execute();
+                self::$query = [];
             } catch (PDOException $e) {
                 exit($e->getMessage());
             }
         }
     }
 
-    public static function addColumn(string $tableName, string $columnName, callable $callback)
+    public static function addColumn(string $tableName, callable $callback)
     {
-        if (self::ifTableExists($tableName)) {
-            if (!self::ifColumnExists($tableName, $columnName)) {
-                $table = self::$instance;
-                $arg[0] = $table;
-                $arg[1] = $columnName;
-                ob_start();
-                call_user_func_array($callback, $arg);
-                $query = ob_get_clean();
-                $query = explode(',', $query);
-                $query = $query[0];
-                $query = "ALTER TABLE $tableName ADD ($query)";
-                try {
-                    $stmt = self::$conn->prepare($query);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    exit($e->getMessage());
-                }
+        if (self::hasTable($tableName)) {
+            $table = self::$instance;
+            call_user_func($callback, $table);
+            $query = self::$query;
+            $query = implode(',', $query);
+            $query = "ALTER TABLE $tableName ADD ($query)";
+            try {
+                $stmt = self::$conn->prepare($query);
+                $stmt->execute();
+                self::$query = [];
+            } catch (PDOException $e) {
+                exit($e->getMessage());
             }
         }
     }
 
-    public static function modifyColumn(string $tableName, string $columnName, callable $callback)
+    public static function modifyColumn(string $tableName, callable $callback)
     {
-        if (self::ifTableExists($tableName)) {
-            if (self::ifColumnExists($tableName, $columnName)) {
-                $table = self::$instance;
-                $arg[0] = $table;
-                $arg[1] = $columnName;
-                ob_start();
-                call_user_func_array($callback, $arg);
-                $query = ob_get_clean();
-                $query = explode(',', $query);
-                $query = $query[0];
-                $query = "ALTER TABLE $tableName MODIFY COLUMN $query";
-                try {
-                    $stmt = self::$conn->prepare($query);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    exit($e->getMessage());
-                }
+        if (self::hasTable($tableName)) {
+            $table = self::$instance;
+            call_user_func($callback, $table);
+            $query = self::$query;
+            $query = implode(',', $query);
+            $query = "ALTER TABLE $tableName MODIFY COLUMN $query";
+            try {
+                $stmt = self::$conn->prepare($query);
+                $stmt->execute();
+                self::$query = [];
+            } catch (PDOException $e) {
+                exit($e->getMessage());
             }
         }
     }
 
     public static function dropColumn(string $tableName, string $columnName)
     {
-        if (self::ifTableExists($tableName)) {
-            if (self::ifColumnExists($tableName, $columnName)) {
+        if (self::hasTable($tableName)) {
+            if (self::hasColumn($tableName, $columnName)) {
                 $query = "ALTER TABLE $tableName DROP COLUMN $columnName";
                 try {
                     $stmt = self::$conn->prepare($query);
@@ -116,7 +106,7 @@ class Schema extends DataBase
 
     public static function dropTable(string $tableName)
     {
-        if (self::ifTableExists($tableName)) {
+        if (self::hasTable($tableName)) {
             $query = "DROP TABLE $tableName";
             try {
                 $stmt = self::$conn->prepare($query);
@@ -127,52 +117,140 @@ class Schema extends DataBase
         }
     }
 
-    public static function bigInt($name, $value = null, $nullable = false, $default = false, $unsigned = false)
+    public static function Default($value)
+    {
+        self::$query[count(self::$query) - 1] = end(self::$query) . " DEFAULT '$value'";
+        return self::$instance;
+    }
+
+    public static function nullable()
+    {
+        self::$query[count(self::$query) - 1] = str_replace(' NOT', '', end(self::$query));
+        return self::$instance;
+    }
+
+    public static function unsigned()
+    {
+        $query = end(self::$query);
+        $query = explode(')', $query);
+        self::$query[count(self::$query) - 1] = $query[0] . ') UNSIGNED' . end($query);
+    }
+
+    public static function bigInt(string $name, $value = null)
     {
         $value = $value ?? 20;
-        $default = ($default !== false) ? " DEFAULT '$default'" : '';
-        $unsigned = ($unsigned !== false) ? " UNSIGNED" : '';
-        $nullable = ($nullable == false) ? ' NOT NULL' : ' NULL';
-        echo "$name BIGINT($value)$unsigned$default$nullable,";
+        self::$query[] = "$name BIGINT($value) NOT NULL";
+        return self::$instance;
     }
 
-    public static function int($name, $value = null, $nullable = false, $default = false, $unsigned = false)
+    public static function int(string $name, $value = null)
     {
         $value = $value ?? 11;
-        $default = ($default !== false) ? " DEFAULT '$default'" : '';
-        $unsigned = ($unsigned !== false) ? " UNSIGNED" : '';
-        $nullable = ($nullable == false) ? ' NOT NULL' : ' NULL';
-        echo "$name INT($value)$unsigned$default$nullable,";
+        self::$query[] = "$name INT($value) NOT NULL";
+        return self::$instance;
     }
 
-    public static function String($name, $value = null, $nullable = false, $default = false)
+    public static function string(string $name, $value = null)
     {
         $value = $value ?? 255;
-        $default = ($default !== false) ? " DEFAULT '$default'" : '';
-        $nullable = ($nullable == false) ? ' NOT NULL' : ' NULL';
-        echo "$name VARCHAR($value)$default$nullable,";
+        self::$query[] = "$name VARCHAR($value) NOT NULL";
+        return self::$instance;
     }
 
-    public static function timestamp($name, $nullable = false, $default = false)
+    public static function enum(string $name, array $values)
     {
-        $default = ($default !== false) ? " DEFAULT '$default'" : '';
-        $nullable = ($nullable == false) ? ' NOT NULL' : ' NULL';
-        echo "$name TIMESTAMP$default$nullable,";
+        $values = "'" . implode("','", $values) . "'";
+        self::$query[] = "$name ENUM($values) NOT NULL";
+        return self::$instance;
     }
 
-    public static function foreignKey($column1, $column2, $tableName, $ondelete, $onupdate)
+    public static function timestamp(string $name)
     {
-        echo "FOREIGN KEY ($column1) REFERENCES $tableName($column2) ON DELETE $ondelete ON UPDATE $onupdate,";
+        self::$query[] = "$name TIMESTAMP NOT NULL";
+        return self::$instance;
     }
 
-    public static function unique($column)
+    public static function time(string $name)
     {
-        echo "UNIQUE ($column),";
+        self::$query[] = "$name TIME NOT NULL";
+        return self::$instance;
+    }
+
+    public static function date(string $name)
+    {
+        self::$query[] = "$name DATE NOT NULL";
+        return self::$instance;
+    }
+
+    public static function float(string $name)
+    {
+        self::$query[] = "$name FLOAT NOT NULL";
+        return self::$instance;
+    }
+
+    public static function double(string $name)
+    {
+        self::$query[] = "$name DOUBLE NOT NULL";
+        return self::$instance;
+    }
+
+    public static function text(string $name)
+    {
+        self::$query[] = "$name TEXT NOT NULL";
+        return self::$instance;
+    }
+
+    public static function mediumtext(string $name)
+    {
+        self::$query[] = "$name MEDIUMTEXT NOT NULL";
+        return self::$instance;
+    }
+
+    public static function longtext(string $name)
+    {
+        self::$query[] = "$name LONGTEXT NOT NULL";
+        return self::$instance;
+    }
+
+    public static function foreign(string $columnName)
+    {
+        self::$query[] = "FOREIGN KEY ($columnName) ";
+        return self::$instance;
+    }
+
+    public static function on(string $tableName)
+    {
+        self::$query[count(self::$query) - 1] = end(self::$query) . "REFERENCES $tableName";
+        return self::$instance;
+    }
+
+    public static function references(string $columnName)
+    {
+        self::$query[count(self::$query) - 1] = end(self::$query) . "($columnName)";
+        return self::$instance;
+    }
+
+    public static function onDelete(string $ondelete)
+    {
+        self::$query[count(self::$query) - 1] = end(self::$query) . " ON DELETE $ondelete";
+        return self::$instance;
+    }
+
+    public static function onUpdate(string $onupdate)
+    {
+        self::$query[count(self::$query) - 1] = end(self::$query) . " ON UPDATE $onupdate";
+        return self::$instance;
+    }
+
+    public static function unique(string $column)
+    {
+        self::$query[] = "UNIQUE ($column)";
     }
 
     public static function id($name = null)
     {
         $name = $name ?? 'id';
-        echo "$name BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,";
+        self::$query[] = "$name BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY";
+        return self::$instance;
     }
 }

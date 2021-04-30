@@ -2,11 +2,10 @@
 
 use App\Database\Schema;
 
-Schema::createTable('password_reset', function ($table) {
-    $table->id();
-    $table->String('email');
-    $table->String('token');
-    $table->timestamp('expire_at');
+Schema::create('password_reset', function ($table) {
+    $table->string('email');
+    $table->string('token');
+    $table->time('expire_at');
     $table->unique('email');
     $table->unique('token');
 });

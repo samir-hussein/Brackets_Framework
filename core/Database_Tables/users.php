@@ -2,11 +2,11 @@
 
 use App\Database\Schema;
 
-Schema::createTable('users', function ($table) {
+Schema::create('users', function ($table) {
     $table->id();
-    $table->String('name');
-    $table->String('email');
-    $table->String('password');
-    $table->timestamp('email_verifed_at', true);
+    $table->string('name');
+    $table->string('email');
+    $table->string('password');
+    $table->timestamp('email_verifed_at')->nullable();
     $table->unique('email');
 });

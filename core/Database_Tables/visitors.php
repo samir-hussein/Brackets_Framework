@@ -2,7 +2,7 @@
 
 use App\Database\Schema;
 
-Schema::createTable('visitors', function ($table) {
+Schema::create('visitors', function ($table) {
     $table->id();
-    $table->String('visitor_ip');
+    $table->string('visitor_ip');
 });
