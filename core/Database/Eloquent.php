@@ -205,7 +205,7 @@ class Eloquent extends DataBase
                 self::$where = [];
                 self::$orWhere = [];
                 self::$orderBy = null;
-                return $result;
+                return $result[0];
             } else return null;
         } else trigger_error('You Can Not Access This Method From DataBase Class', E_USER_ERROR);
     }

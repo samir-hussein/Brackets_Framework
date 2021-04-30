@@ -14,14 +14,14 @@ class Auth
         return new Auth;
     }
 
-    public static function attempt(string $email, string $password, bool $remember = null)
+    public static function attempt(array $userInfo, bool $remember = null)
     {
         $table = self::$table ?? 'users';
         $sql = "SELECT * FROM $table WHERE email=:email";
-        $value = ['email' => $email];
+        $value = ['email' => $userInfo['email']];
         if ($result = DataBase::prepare($sql, $value)) {
             foreach ($result as $row) {
-                if (password_verify($password, $row->password)) {
+                if (password_verify($userInfo['password'], $row->password)) {
                     $row = (array) $row;
                     unset($row['password']);
                     Session::set('user', array_keys($row));
