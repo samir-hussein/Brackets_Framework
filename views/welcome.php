@@ -1,5 +1,7 @@
-<?php extend('layouts/main') ?>
-<?php section('title', 'Welcome') ?>
+<?php
+extend('layouts/main');
+section('title', 'Welcome');
+?>
 
 <?php section('content') ?>
 <div class="d-flex flex-column align-items-center justify-content-center uk-background-muted" style="height:100vh">

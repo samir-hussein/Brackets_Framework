@@ -11,7 +11,7 @@ class Verifed implements Middlewares
         if (is_null(Auth::is_verified())) {
             return redirect('/login');
         } elseif (!Auth::is_verified()) {
-            return redirect('/verify-email');
+            return redirect('/verify-email-view');
         }
     }
 }

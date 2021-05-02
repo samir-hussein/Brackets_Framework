@@ -37,9 +37,11 @@ class Mail
     {
         $message = self::$message;
 
-        if (!is_null($data) && !is_null($view)) {
+        if (!is_null($view)) {
             ob_start();
-            extract($data);
+            if (!is_null($data)) {
+                extract($data);
+            }
             include __DIR__ . "/../views/$view.php";
             self::$mail->Body = ob_get_clean();
         }

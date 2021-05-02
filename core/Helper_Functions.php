@@ -19,8 +19,13 @@ function response()
     return $GLOBALS['response'];
 }
 
-function redirect(string $url)
+function redirect(string $url, array $variables = null)
 {
+    if (!is_null($variables)) {
+        foreach ($variables as $key => $value) {
+            Session::flash($key, $value);
+        }
+    }
     $GLOBALS['response']->redirect($url);
 }
 
@@ -200,8 +205,14 @@ function method(string $method)
     return "<input type='hidden' name='_METHOD' value='$method'>";
 }
 
-function back()
+function back(array $variables = null)
 {
+    if (!is_null($variables)) {
+        foreach ($variables as $key => $value) {
+            Session::flash($key, $value);
+        }
+    }
+
     if (isset($_SERVER['HTTP_REFERER']))
         header("location: " . $_SERVER['HTTP_REFERER']);
 }

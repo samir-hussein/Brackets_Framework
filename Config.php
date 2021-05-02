@@ -3,11 +3,15 @@
 global $config;
 
 $config = [
+    'App' => [
+        'APP_NAME' => 'Brackets',
+    ],
+
     'MySql' => [
         'serverName' => 'localhost',
         'userName'   => 'root',
         'password'   => '',
-        'dbName'     => 'testdata',
+        'dbName'     => '',
     ],
 
     'PayMob'   => [
