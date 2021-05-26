@@ -4,8 +4,8 @@ php_value session.gc_maxlifetime 10800
 
 RewriteEngine On
 
-RewriteCond %{HTTP_HOST} ^domain$ [NC,OR]
-RewriteCond %{HTTP_HOST} ^domain$
+RewriteCond %{HTTP_HOST} ^put_domain_here$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^put_domain_here$
 RewriteCond %{REQUEST_URI} !public/
 RewriteRule (.*) /public/index.php?url=$1 [QSA,L]
 
