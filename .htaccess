@@ -1,7 +1,3 @@
-php_value post_max_size 5100M
-php_value upload_max_filesize 5000M
-php_value session.gc_maxlifetime 10800
-
 RewriteEngine On
 
 RewriteCond %{HTTP_HOST} ^put_domain_here$ [NC,OR]
