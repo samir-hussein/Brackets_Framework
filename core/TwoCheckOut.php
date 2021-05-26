@@ -8,11 +8,11 @@ class TwoCheckOut
     private static $privateKey;
     private static $demo;
 
-    public function __construct($config)
+    public function __construct()
     {
-        self::$merchantCode = $config['merchantCode'];
-        self::$privateKey = $config['privateKey'];
-        self::$demo = $config['demo'];
+        self::$merchantCode = $_ENV['TwoCheckOut_MerchantCode'];
+        self::$privateKey = $_ENV['TwoCheckOut_PrivateKey'];
+        self::$demo = $_ENV['TwoCheckOut_Demo'];
     }
 
     public static function createSale(array $requestData)

@@ -1,5 +1,5 @@
 {
-    "name": "samir_hussein/mvc_fromework",
+    "name": "samir_hussein/brackets",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "dev",
@@ -16,12 +16,12 @@
         },
         "files": [
             "core/Helper_Functions.php",
-            "Config.php",
             "routes/web.php",
             "routes/api.php"
         ]
     },
     "require": {
-        "phpmailer/phpmailer": "dev-master"
+        "phpmailer/phpmailer": "dev-master",
+        "vlucas/phpdotenv": "5.3.x-dev"
     }
 }

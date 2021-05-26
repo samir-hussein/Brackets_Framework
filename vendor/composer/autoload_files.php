@@ -6,8 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'e3be96933ce0d06adc34a8dba8d3d946' => $baseDir . '/core/Helper_Functions.php',
-    '048e3245ad7c43eb4498bffd564e8a4f' => $baseDir . '/Config.php',
-    'a3eb6a156658aeda15ce22acc8655549' => $baseDir . '/routes/web.php',
-    '2e5388f8b5b4d8e9f4c5b2d3524ab9b3' => $baseDir . '/routes/api.php',
+    '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
+    '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
+    'bfef5f4de139a720ab8f3eed077633a9' => $baseDir . '/core/Helper_Functions.php',
+    '3f1e9b43852d78938e1c3c7c0fe8b12d' => $baseDir . '/routes/web.php',
+    '0ee491f453e86830b1cf7c190198c05a' => $baseDir . '/routes/api.php',
 );

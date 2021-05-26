@@ -23,28 +23,28 @@ class Application
     private $paymob;
     private $TwoCheckOut;
 
-    public function __construct($config = null)
+    public function __construct()
     {
         $this->request = new Request();
         $this->response = new Response();
         $this->route = new Route($this->request, $this->response);
         self::$app = $this;
         $this->session = new Session;
-        $this->mail = new Mail($config['Mail']);
+        $this->mail = new Mail();
 
-        if (!empty($config['MySql']['dbName'])) {
-            $this->db = new DataBase($config['MySql']);
+        if (!empty($_ENV['MySql_DBName'])) {
+            $this->db = new DataBase();
             $this->schema = new Schema();
             $this->migrations = new Migrations();
             $this->visitors = new Visitors();
         }
 
-        if (!empty($config['PayMob']['PayMob_User_Name'])) {
-            $this->paymob = new PayMob($config['PayMob']);
+        if (!empty($_ENV['PayMob_User_Name'])) {
+            $this->paymob = new PayMob();
         }
 
-        if (!empty($config['2checkout']['merchantCode'])) {
-            $this->TwoCheckOut = new TwoCheckOut($config['2checkout']);
+        if (!empty($_ENV['TwoCheckOut_MerchantCode'])) {
+            $this->TwoCheckOut = new TwoCheckOut();
         }
     }
 

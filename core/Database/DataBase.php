@@ -19,12 +19,12 @@ class DataBase
     protected static $orWhere = [];
     protected static $orderBy = null;
 
-    public function __construct(array $config)
+    public function __construct()
     {
-        $this->serverName = $config['serverName'];
-        $this->userName = $config['userName'];
-        $this->password = $config['password'];
-        $this->dbName = $config['dbName'];
+        $this->serverName = $_ENV['MySql_ServerName'];
+        $this->userName = $_ENV['MySql_UserName'];
+        $this->password = $_ENV['MySql_Password'];
+        $this->dbName = $_ENV['MySql_DBName'];
 
         try {
             self::$conn = new PDO("mysql:host=" . $this->serverName . ";dbname=" . $this->dbName, $this->userName, $this->password);

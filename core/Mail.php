@@ -11,7 +11,7 @@ class Mail
     private static $mail;
     private static $message;
 
-    public function __construct($config)
+    public function __construct()
     {
         self::$mail = new PHPMailer(true);
         self::$message = $this;
@@ -20,12 +20,12 @@ class Mail
             //Server settings
             // self::$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
             self::$mail->isSMTP();                                            //Send using SMTP
-            self::$mail->Host       = $config['MAIL_HOST'];                   //Set the SMTP server to send through
+            self::$mail->Host       = $_ENV['MAIL_HOST'];                   //Set the SMTP server to send through
             self::$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            self::$mail->Username   = $config['MAIL_USERNAME'];               //SMTP username
-            self::$mail->Password   = $config['MAIL_PASSWORD'];               //SMTP password
+            self::$mail->Username   = $_ENV['MAIL_USERNAME'];               //SMTP username
+            self::$mail->Password   = $_ENV['MAIL_PASSWORD'];               //SMTP password
             self::$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            self::$mail->Port       = $config['MAIL_PORT'];                   //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+            self::$mail->Port       = $_ENV['MAIL_PORT'];                   //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
             self::$mail->isHTML(true);                                        //Set email format to HTML
         } catch (Exception $e) {
             $error = self::$mail->ErrorInfo;

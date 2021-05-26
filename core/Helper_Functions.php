@@ -162,10 +162,9 @@ function extend(string $path)
     $router->setLayout($path);
 }
 
-function config($package, $property)
+function config($property)
 {
-    global $config;
-    return $config[$package][$property];
+    return $_ENV[$property];
 }
 
 function token()
