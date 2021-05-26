@@ -58,7 +58,7 @@ class PasswordReset
 
             Mail::send(function ($message) {
                 global $email;
-                $message->from(config('Mail', 'MAIL_USERNAME'), config('App', 'APP_NAME'));
+                $message->from(config('MAIL_USERNAME'), config('APP_NAME'));
                 $message->to($email);
                 $message->subject('Email Verification');
             }, '../core/ResetPassword/password_view', $data);
