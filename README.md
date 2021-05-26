@@ -1,6 +1,6 @@
 # Brackets_Framework
 
-you must put your domain name in .htaccess file to run the website
+##you must put your domain name in .htaccess file to run the website
 
 ### Email verification
 ```php
