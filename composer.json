@@ -22,6 +22,8 @@
     },
     "require": {
         "phpmailer/phpmailer": "dev-master",
-        "vlucas/phpdotenv": "5.3.x-dev"
+        "vlucas/phpdotenv": "5.3.x-dev",
+        "kreait/firebase-php": "5.x-dev",
+        "google/cloud-firestore": "dev-master"
     }
 }
