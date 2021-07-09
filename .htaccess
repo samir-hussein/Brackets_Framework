@@ -1,7 +1,7 @@
 RewriteEngine On
 
-RewriteCond %{HTTP_HOST} ^put_domain_here$ [NC,OR]
-RewriteCond %{HTTP_HOST} ^put_domain_here$
+RewriteCond %{HTTP_HOST} ^put_your_domain_here$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^put_your_domain_here$
 RewriteCond %{REQUEST_URI} !public/
 RewriteRule (.*) /public/index.php?url=$1 [QSA,L]
 
