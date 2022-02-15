@@ -22,7 +22,6 @@ class Application
     private $visitors;
     private $paymob;
     private $TwoCheckOut;
-    private $Firebase;
 
     public function __construct()
     {
@@ -32,10 +31,6 @@ class Application
         self::$app = $this;
         $this->session = new Session;
         $this->mail = new Mail();
-
-        if (!empty($_ENV['FIREBASE_CREDENTIALS'])) {
-            $this->Firebase = new Firebase();
-        }
 
         if (!empty($_ENV['MySql_DBName'])) {
             $this->db = new DataBase();
