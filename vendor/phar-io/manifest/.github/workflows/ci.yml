@@ -1,36 +1,83 @@
-name: Code quality checks
-# This workflow is triggered on pushes to the repository.
-on: [push]
+name: "CI"
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request: null
 
 jobs:
   qa:
-    # This job runs on Linux
-    runs-on: ubuntu-latest
+    name: "QA"
+
+    runs-on: "ubuntu-latest"
+
     steps:
-      - uses: actions/checkout@master
-      - name: composer
-        uses: docker://composer
+      - name: "Checkout"
+        uses: "actions/checkout@v2.4.0"
+
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.17.0"
+        with:
+          coverage: "none"
+          php-version: "8.0"
+          tools: "phive"
+
+      - name: "Install dependencies with composer"
+        run: "composer install --no-interaction --optimize-autoloader --prefer-dist"
+
+      - name: "Install dependencies with phive"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: install --no-interaction --prefer-dist --optimize-autoloader
+          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: "ant install-tools"
 
-      - name: phive
-        uses: './.github/actions/phive-ant'
-        with:
-          args: 'getphive'
+      - name: "Run php-cs-fixer"
+        run: "ant php-cs-fixer"
 
-      - name: phive install
-        uses: './.github/actions/phive-ant'
+      - name: "Run psalm"
+        run: "ant psalm"
+
+  tests:
+    name: "Tests"
+
+    runs-on: "${{ matrix.operating-system }}"
+
+    strategy:
+      matrix:
+        operating-system:
+          - "macos-latest"
+          - "ubuntu-latest"
+          - "windows-latest"
+
+        php-versions:
+          - "7.2"
+          - "7.3"
+          - "7.4"
+          - "8.0"
+          - "8.1"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.4.0"
+
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@2.17.0"
         env:
-          phive.bin: "/phive.phar"
+          COMPOSER_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          args: -Dphive.bin=./phive.phar install-tools
+          coverage: "pcov"
+          extensions: "${{ env.extensions }}"
+          ini-values: "display_errors=On, error_reporting=-1, memory_limit=2G"
+          php-version: "${{ matrix.php-versions }}"
+          tools: "phpunit:8.5"
 
-      - name: php-cs-fixer
-        uses: './.github/actions/phive-ant'
-        env:
-          phive.bin: "/phive.phar"
+      - name: "Install dependencies with composer"
+        run: "composer install --no-interaction --optimize-autoloader --prefer-dist"
+
+      - name: "Run PHPUnit"
+        run: "phpunit --coverage-clover build/logs/clover.xml"
+
+      - name: "Send code coverage report to codecov.io"
+        uses: "codecov/codecov-action@v2"
         with:
-          args: -Dphive.bin=./phive.phar php-cs-fixer
-
+          files: "build/logs/clover.xml"

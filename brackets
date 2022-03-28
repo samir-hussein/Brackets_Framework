@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Commands\ModelCommand;
+use Commands\ServeCommand;
+use Commands\MigrationCommand;
+use Commands\ControllerCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+# add our commands
+$application->add(new ServeCommand());
+$application->add(new ControllerCommand());
+$application->add(new MigrationCommand());
+$application->add(new ModelCommand());
+
+$application->run();
