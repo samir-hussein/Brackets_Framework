@@ -64,10 +64,16 @@ function title(string $title)
 function assets(string $path)
 {
     if (strpos($_SERVER['DOCUMENT_ROOT'], 'public') !== false) {
-        echo "assets/$path";
+        echo "/assets/$path";
     } else {
-        echo "public/assets/$path";
+        echo "/public/assets/$path";
     }
+}
+
+function showRoutes()
+{
+    global $router;
+    $router->showRoutes();
 }
 
 function public_path(string $path)
@@ -214,4 +220,12 @@ function back(array $variables = null)
 
     if (isset($_SERVER['HTTP_REFERER']))
         header("location: " . $_SERVER['HTTP_REFERER']);
+}
+
+function csrf()
+{
+    $token = token();
+    $_SESSION['csrf_tokens'][] = $token;
+
+    echo "<input type='hidden' name='__token' value=$token>";
 }

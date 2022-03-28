@@ -45,6 +45,12 @@ class Route
 
     public static function urlPattern(string $path)
     {
+        $path = (strpos($path, '/') !== false) ? "$path" : "/$path";
+
+        if (basename(debug_backtrace()[1]['file']) == "api.php") {
+            $path = "/api$path";
+        }
+
         $path = explode('/', $path);
         $i = 0;
         foreach ($path as $item) {
@@ -60,9 +66,6 @@ class Route
     public static function get(string $path, $callback)
     {
         $path = self::urlPattern($path);
-        if (basename(debug_backtrace()[0]['file']) == "api.php") {
-            $path = "/api$path";
-        }
 
         self::$routes['get'][$path] = $callback;
         self::$middlewareArr[$path] = self::$middleware;
@@ -73,9 +76,7 @@ class Route
     public static function post(string $path, $callback)
     {
         $path = self::urlPattern($path);
-        if (basename(debug_backtrace()[0]['file']) == "api.php") {
-            $path = "/api$path";
-        }
+
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['post'][$path] = $callback;
         self::$regx[] = $path;
@@ -85,9 +86,7 @@ class Route
     public static function delete(string $path, $callback)
     {
         $path = self::urlPattern($path);
-        if (basename(debug_backtrace()[0]['file']) == "api.php") {
-            $path = "/api$path";
-        }
+
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['delete'][$path] = $callback;
         self::$regx[] = $path;
@@ -97,9 +96,7 @@ class Route
     public static function put(string $path, $callback)
     {
         $path = self::urlPattern($path);
-        if (basename(debug_backtrace()[0]['file']) == "api.php") {
-            $path = "/api$path";
-        }
+
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['put'][$path] = $callback;
         self::$regx[] = $path;
@@ -109,9 +106,6 @@ class Route
     public static function any(string $path, $callback)
     {
         $path = self::urlPattern($path);
-        if (basename(debug_backtrace()[0]['file']) == "api.php") {
-            $path = "/api$path";
-        }
 
         self::$middlewareArr[$path] = self::$middleware;
         self::$routes['get'][$path] = $callback;
@@ -129,8 +123,26 @@ class Route
         self::$middleware = null;
     }
 
+    private function check_csrf()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $token = isset($_REQUEST['__token']) ? $_REQUEST['__token'] : null;
+
+            if (!$token || !in_array($token, $_SESSION['csrf_tokens'])) {
+                // return 405 http status code
+                header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
+                exit;
+            }
+        }
+    }
+
     public function resolve()
     {
+        if ($_ENV['CSRF_PROTECTION'] == 'true') {
+            self::$route->check_csrf();
+        }
+        Session::remove('csrf_tokens');
+
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
         $ArrayParams = [];
@@ -210,5 +222,18 @@ class Route
         extract($variables);
         include_once __DIR__ . "/../views/$view.php";
         return ob_get_clean();
+    }
+
+    public function showRoutes()
+    {
+        $temp = [];
+        foreach (self::$routes as $method => $route) {
+            $method = ($method == 'view') ? 'get' : $method;
+            foreach ($route as $key => $val) {
+                $key = ltrim($key, $key[0]);
+                $temp[$method][] = str_replace(['\\', '/iu'], '', $key);
+            }
+        }
+        dd($temp);
     }
 }

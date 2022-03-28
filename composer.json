@@ -29,7 +29,8 @@
     },
     "require": {
         "phpmailer/phpmailer": "dev-master",
-        "vlucas/phpdotenv": "5.4.x-dev"
+        "vlucas/phpdotenv": "5.4.x-dev",
+        "mongodb/mongodb": "v1.11.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "9.5"
