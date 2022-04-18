@@ -5,8 +5,8 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a45654ef014964f70fcbd80a4fb16835b56d3d78',
-        'name' => 'samir_hussein/brackets',
+        'reference' => 'df0ad2c0bc442d61b5a0efb2503a4f8f3c8b8eba',
+        'name' => 'samir-hussein/brackets',
         'dev' => true,
     ),
     'versions' => array(
@@ -35,6 +35,17 @@
             'install_path' => __DIR__ . '/../jean85/pretty-package-versions',
             'aliases' => array(),
             'reference' => '1064f44093e0b2ca67c8fcc4b685225ee059e847',
+            'dev_requirement' => false,
+        ),
+        'mirazmac/dotenvwriter' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mirazmac/dotenvwriter',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'reference' => 'ee9528cc9916318edc17c9fe223995ca78908f9d',
             'dev_requirement' => false,
         ),
         'mongodb/mongodb' => array(
@@ -103,7 +114,7 @@
             'aliases' => array(
                 0 => '5.x-dev',
             ),
-            'reference' => '21481a5c97e8332f7279e31219c32faa2da21c79',
+            'reference' => '9455bde915e322a823d464a2c41e5c0de03512a6',
             'dev_requirement' => true,
         ),
         'phpdocumentor/type-resolver' => array(
@@ -123,7 +134,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '0912769c6656fa5425a63323f25795dfe46a8197',
+            'reference' => 'bf99c202a92daa6d847bc346d554a4727fd802a5',
             'dev_requirement' => false,
         ),
         'phpoption/phpoption' => array(
@@ -154,7 +165,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/php-code-coverage',
             'aliases' => array(),
-            'reference' => 'c46105173d72d632e3829add9f50aded1e702572',
+            'reference' => '1586c6ac5c7a8f45a15de9bb8a8531ca9812fba1',
             'dev_requirement' => true,
         ),
         'phpunit/php-file-iterator' => array(
@@ -219,13 +230,13 @@
                 0 => '1.0|2.0|3.0',
             ),
         ),
-        'samir_hussein/brackets' => array(
+        'samir-hussein/brackets' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a45654ef014964f70fcbd80a4fb16835b56d3d78',
+            'reference' => 'df0ad2c0bc442d61b5a0efb2503a4f8f3c8b8eba',
             'dev_requirement' => false,
         ),
         'sebastian/cli-parser' => array(
@@ -283,12 +294,12 @@
             'dev_requirement' => true,
         ),
         'sebastian/environment' => array(
-            'pretty_version' => '5.1.3',
-            'version' => '5.1.3.0',
+            'pretty_version' => '5.1.x-dev',
+            'version' => '5.1.9999999.9999999-dev',
             'type' => 'library',
             'install_path' => __DIR__ . '/../sebastian/environment',
             'aliases' => array(),
-            'reference' => '388b6ced16caa751030f6a69e588299fa09200ac',
+            'reference' => '3fade0c8462024d0426a00dc1ad0a2fda0df733f',
             'dev_requirement' => true,
         ),
         'sebastian/exporter' => array(
@@ -346,14 +357,14 @@
             'dev_requirement' => true,
         ),
         'sebastian/resource-operations' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'library',
             'install_path' => __DIR__ . '/../sebastian/resource-operations',
             'aliases' => array(
                 0 => '3.0.x-dev',
             ),
-            'reference' => '0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8',
+            'reference' => '0bb681ab112cdcd15dc71ea4ed7fb78e7060828b',
             'dev_requirement' => true,
         ),
         'sebastian/type' => array(
@@ -380,7 +391,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/console',
             'aliases' => array(),
-            'reference' => 'ca700c0d8c82b4129f1cb29b91ffc3fc7e31f62e',
+            'reference' => '196c43b0e37be374a7d36ac3911682027fd8decd',
             'dev_requirement' => false,
         ),
         'symfony/deprecation-contracts' => array(
@@ -391,7 +402,7 @@
             'aliases' => array(
                 0 => '3.1.x-dev',
             ),
-            'reference' => '893fd20d9ae41a0bae2b9cbdd581ac0cf3917de3',
+            'reference' => '07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918',
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(
@@ -447,7 +458,7 @@
             'aliases' => array(
                 0 => '3.1.x-dev',
             ),
-            'reference' => 'bc0a2247c72d29241b5a06fb60dc1c9d9acf2a3a',
+            'reference' => '77ca81f6ddb67beb5202614c1b92faf27dca7661',
             'dev_requirement' => false,
         ),
         'symfony/string' => array(
@@ -456,7 +467,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/string',
             'aliases' => array(),
-            'reference' => '6e0bf37c9c4826549e1c601123aa9d1b36b4f36e',
+            'reference' => 'a462308f433bcf0433eed11b121463f51024837a',
             'dev_requirement' => false,
         ),
         'theseer/tokenizer' => array(
@@ -487,7 +498,7 @@
             'aliases' => array(
                 0 => '1.10.x-dev',
             ),
-            'reference' => 'b419d648592b0b8911cbbe10d450fe314f4fd262',
+            'reference' => 'dc96b6775d038bfa31a240150ad8505bfb856c2d',
             'dev_requirement' => true,
         ),
     ),

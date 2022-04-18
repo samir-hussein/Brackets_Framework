@@ -7,14 +7,14 @@ use PDOException;
 
 class Schema extends DataBase
 {
-    private static $instance;
     private static $query = [];
 
-    public function __construct()
-    {
-        self::$instance = $this;
-    }
-
+    /**
+     * Check if table exists in datebase
+     *
+     * @param string $tableName
+     * @return boolean
+     */
     public static function hasTable(string $tableName): bool
     {
         $result = self::$conn->query("SHOW TABLES LIKE '$tableName'");
@@ -24,6 +24,13 @@ class Schema extends DataBase
         else return false;
     }
 
+    /**
+     * Check if column exists in table
+     *
+     * @param string $tableName
+     * @param string $columnName
+     * @return boolean
+     */
     public static function hasColumn(string $tableName, string $columnName): bool
     {
         $myschema = config('MySql', 'dbName');
@@ -36,10 +43,17 @@ class Schema extends DataBase
         else return false;
     }
 
-    public static function create(string $tableName, callable $callback)
+    /**
+     * Create a table in a database
+     *
+     * @param string $tableName
+     * @param callable $callback
+     * @return void
+     */
+    public function create(string $tableName, callable $callback): void
     {
         if (!self::hasTable($tableName)) {
-            $table = self::$instance;
+            $table = $this;
             call_user_func($callback, $table);
             $query = self::$query;
             $query = "CREATE TABLE $tableName (" . implode(',', $query) . ")";
@@ -53,10 +67,17 @@ class Schema extends DataBase
         }
     }
 
-    public static function addColumn(string $tableName, callable $callback)
+    /**
+     * Add a column to a table
+     *
+     * @param string $tableName
+     * @param callable $callback
+     * @return void
+     */
+    public function addColumn(string $tableName, callable $callback): void
     {
         if (self::hasTable($tableName)) {
-            $table = self::$instance;
+            $table = $this;
             call_user_func($callback, $table);
             $query = self::$query;
             $query = implode(',', $query);
@@ -71,10 +92,17 @@ class Schema extends DataBase
         }
     }
 
-    public static function modifyColumn(string $tableName, callable $callback)
+    /**
+     * modify a column
+     *
+     * @param string $tableName
+     * @param callable $callback
+     * @return void
+     */
+    public function modifyColumn(string $tableName, callable $callback): void
     {
         if (self::hasTable($tableName)) {
-            $table = self::$instance;
+            $table = $this;
             call_user_func($callback, $table);
             $query = self::$query;
             $query = implode(',', $query);
@@ -89,7 +117,14 @@ class Schema extends DataBase
         }
     }
 
-    public static function dropColumn(string $tableName, string $columnName)
+    /**
+     * Drop a column
+     *
+     * @param string $tableName
+     * @param string $columnName
+     * @return void
+     */
+    public static function dropColumn(string $tableName, string $columnName): void
     {
         if (self::hasTable($tableName)) {
             if (self::hasColumn($tableName, $columnName)) {
@@ -104,7 +139,13 @@ class Schema extends DataBase
         }
     }
 
-    public static function dropTable(string $tableName)
+    /**
+     * Drop a table
+     *
+     * @param string $tableName
+     * @return void
+     */
+    public static function dropTable(string $tableName): void
     {
         if (self::hasTable($tableName)) {
             $query = "DROP TABLE $tableName";
@@ -117,18 +158,34 @@ class Schema extends DataBase
         }
     }
 
-    public static function Default($value)
+    /**
+     * Set default value to the column
+     *
+     * @param string|integer|boolean $value
+     * @return Schema
+     */
+    public function default(string|int|bool $value)
     {
         self::$query[count(self::$query) - 1] = end(self::$query) . " DEFAULT '$value'";
-        return self::$instance;
+        return $this;
     }
 
-    public static function nullable()
+    /**
+     * Allow null value to this column
+     *
+     * @return Schema
+     */
+    public function nullable()
     {
         self::$query[count(self::$query) - 1] = str_replace(' NOT', '', end(self::$query));
-        return self::$instance;
+        return $this;
     }
 
+    /**
+     * Make column unsigned
+     *
+     * @return void
+     */
     public static function unsigned()
     {
         $query = end(self::$query);
@@ -136,121 +193,231 @@ class Schema extends DataBase
         self::$query[count(self::$query) - 1] = $query[0] . ') UNSIGNED' . end($query);
     }
 
-    public static function bigInt(string $name, $value = null)
+    /**
+     * column with type BIGINT
+     *
+     * @param string $name
+     * @param integer $value
+     * @return Schema
+     */
+    public function bigInt(string $name, int $value = 20)
     {
-        $value = $value ?? 20;
         self::$query[] = "$name BIGINT($value) NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function int(string $name, $value = null)
+    /**
+     * column with type INT
+     *
+     * @param string $name
+     * @param integer $value
+     * @return Schema
+     */
+    public function int(string $name, int $value = 11)
     {
-        $value = $value ?? 11;
         self::$query[] = "$name INT($value) NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function string(string $name, $value = null)
+    /**
+     * column with type VARCHAR
+     *
+     * @param string $name
+     * @param integer $value
+     * @return Schema
+     */
+    public function string(string $name, int $value = 255)
     {
-        $value = $value ?? 255;
         self::$query[] = "$name VARCHAR($value) NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function enum(string $name, array $values)
+    /**
+     * column with type ENUM
+     *
+     * @param string $name
+     * @param array $values
+     * @return Schema
+     */
+    public function enum(string $name, array $values)
     {
         $values = "'" . implode("','", $values) . "'";
         self::$query[] = "$name ENUM($values) NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function timestamp(string $name)
+    /**
+     * column with type TIMESTAMP
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function timestamp(string $name)
     {
         self::$query[] = "$name TIMESTAMP NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function time(string $name)
+    /**
+     * column with type TIME
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function time(string $name)
     {
         self::$query[] = "$name TIME NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function date(string $name)
+    /**
+     * column with type DATE
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function date(string $name)
     {
         self::$query[] = "$name DATE NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function float(string $name)
+    /**
+     * column with type FLOAT
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function float(string $name)
     {
         self::$query[] = "$name FLOAT NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function double(string $name)
+    /**
+     * column with type DOUBLE
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function double(string $name)
     {
         self::$query[] = "$name DOUBLE NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function text(string $name)
+    /**
+     * column with type TEXT
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function text(string $name)
     {
         self::$query[] = "$name TEXT NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function mediumtext(string $name)
+    /**
+     * column with type MEDIUMTEXT
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function mediumtext(string $name)
     {
         self::$query[] = "$name MEDIUMTEXT NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function longtext(string $name)
+    /**
+     * column with type LONGTEXT
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function longtext(string $name)
     {
         self::$query[] = "$name LONGTEXT NOT NULL";
-        return self::$instance;
+        return $this;
     }
 
-    public static function foreign(string $columnName)
+    /**
+     * FOREIGN KEY
+     *
+     * @param string $columnName
+     * @return Schema
+     */
+    public function foreign(string $columnName)
     {
         self::$query[] = "FOREIGN KEY ($columnName) ";
-        return self::$instance;
+        return $this;
     }
 
-    public static function on(string $tableName)
+    /**
+     *
+     * @param string $tableName
+     * @return Schema
+     */
+    public function on(string $tableName)
     {
         self::$query[count(self::$query) - 1] = end(self::$query) . "REFERENCES $tableName";
-        return self::$instance;
+        return $this;
     }
 
-    public static function references(string $columnName)
+    /**
+     *
+     * @param string $columnName
+     * @return Schema
+     */
+    public function references(string $columnName)
     {
         self::$query[count(self::$query) - 1] = end(self::$query) . "($columnName)";
-        return self::$instance;
+        return $this;
     }
 
-    public static function onDelete(string $ondelete)
+    /**
+     *
+     * @param string $ondelete
+     * @return Schema
+     */
+    public function onDelete(string $ondelete)
     {
         self::$query[count(self::$query) - 1] = end(self::$query) . " ON DELETE $ondelete";
-        return self::$instance;
+        return $this;
     }
 
-    public static function onUpdate(string $onupdate)
+    /**
+     *
+     * @param string $onupdate
+     * @return Schema
+     */
+    public function onUpdate(string $onupdate)
     {
         self::$query[count(self::$query) - 1] = end(self::$query) . " ON UPDATE $onupdate";
-        return self::$instance;
+        return $this;
     }
 
-    public static function unique(string $column)
+    /**
+     * make column unique
+     *
+     * @param string $column
+     * @return void
+     */
+    public function unique(string $column)
     {
         self::$query[] = "UNIQUE ($column)";
     }
 
-    public static function id($name = null)
+    /**
+     * column with name id and type BIGINT
+     *
+     * @param string $name
+     * @return Schema
+     */
+    public function id(string $name = 'id')
     {
-        $name = $name ?? 'id';
         self::$query[] = "$name BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY";
-        return self::$instance;
+        return $this;
     }
 }

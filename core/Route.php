@@ -2,6 +2,8 @@
 
 namespace App;
 
+use function PHPUnit\Framework\isNull;
+
 class Route
 {
 
@@ -10,10 +12,13 @@ class Route
     public $response; // instance of class Response
     public static $layout; //store page layout name
     public static $title; // store page title
-    private static $middleware; // store page middleware name 
     protected static $routes = []; // store all routes of the application
     private static $middlewareArr = []; // store all middlewares of routes
     private static $regx = []; // store all regx for all routes
+    private static $routesNames = []; // store routes names
+    private static $routesList = [];
+    private static $prevPath;
+    private static $prevPathPattern;
 
     public function __construct(Request $request, Response $response)
     {
@@ -25,12 +30,29 @@ class Route
     /**
      * Set the value of middleware
      *
-     * @return  self
+     * @return  Route
      */
-    public static function middleware(string $name)
+    public function middleware(string $name)
     {
-        self::$middleware = $name;
+        self::$middlewareArr[self::$prevPathPattern] = $name;
         return self::$route;
+    }
+
+    public function name(string $name)
+    {
+        self::$routesNames[$name] = self::$prevPath;
+        return self::$route;
+    }
+
+    public function getRouteByName(string $name, array|null $parameters)
+    {
+        $route = self::$routesNames[$name];
+        if ($parameters) {
+            foreach ($parameters as $key => $val) {
+                $route = str_replace('{' . $key . '}', $val, $route);
+            }
+        }
+        return $route;
     }
 
     /**
@@ -43,13 +65,16 @@ class Route
         self::$layout = $layout;
     }
 
-    public static function urlPattern(string $path)
+    public static function urlPattern(string $path, string $method)
     {
-        $path = (strpos($path, '/') !== false) ? "$path" : "/$path";
+        $path = (str_starts_with($path, '/') == true) ? "$path" : "/$path";
 
         if (basename(debug_backtrace()[1]['file']) == "api.php") {
             $path = "/api$path";
         }
+
+        self::$routesList[$method][] = $path;
+        self::$prevPath = $path;
 
         $path = explode('/', $path);
         $i = 0;
@@ -60,92 +85,89 @@ class Route
             $i++;
         }
         $path = '/' . implode('\/', $path) . '/iu';
+        self::$prevPathPattern = $path;
         return $path;
     }
 
     public static function get(string $path, $callback)
     {
-        $path = self::urlPattern($path);
+        $path = self::urlPattern($path, 'GET');
 
         self::$routes['get'][$path] = $callback;
-        self::$middlewareArr[$path] = self::$middleware;
         self::$regx[] = $path;
-        self::$middleware = null;
+
+        return self::$route;
     }
 
     public static function post(string $path, $callback)
     {
-        $path = self::urlPattern($path);
+        $path = self::urlPattern($path, 'POST');
 
-        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['post'][$path] = $callback;
         self::$regx[] = $path;
-        self::$middleware = null;
+
+        return self::$route;
     }
 
     public static function delete(string $path, $callback)
     {
-        $path = self::urlPattern($path);
+        $path = self::urlPattern($path, 'DELETE');
 
-        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['delete'][$path] = $callback;
         self::$regx[] = $path;
-        self::$middleware = null;
+
+        return self::$route;
     }
 
     public static function put(string $path, $callback)
     {
-        $path = self::urlPattern($path);
+        $path = self::urlPattern($path, 'PUT');
 
-        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['put'][$path] = $callback;
         self::$regx[] = $path;
-        self::$middleware = null;
+
+        return self::$route;
     }
 
     public static function any(string $path, $callback)
     {
-        $path = self::urlPattern($path);
+        $path = self::urlPattern($path, 'GET|POST|PUT|DELETE');
 
-        self::$middlewareArr[$path] = self::$middleware;
         self::$routes['get'][$path] = $callback;
         self::$routes['post'][$path] = $callback;
         self::$routes['delete'][$path] = $callback;
         self::$routes['put'][$path] = $callback;
         self::$regx[] = $path;
-        self::$middleware = null;
+
+        return self::$route;
     }
 
     public static function view(string $path, string $callback)
     {
-        self::$middlewareArr[$path] = self::$middleware;
+        $path = (str_starts_with($path, '/') == true) ? "$path" : "/$path";
+        self::$routesList['GET'][] = $path;
         self::$routes['view'][$path] = $callback;
-        self::$middleware = null;
-    }
 
-    private function check_csrf()
-    {
-        if (isset($_SERVER['HTTP_REFERER'])) {
-            $token = isset($_REQUEST['__token']) ? $_REQUEST['__token'] : null;
-
-            if (!$token || !in_array($token, $_SESSION['csrf_tokens'])) {
-                // return 405 http status code
-                header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
-                exit;
-            }
-        }
+        return self::$route;
     }
 
     public function resolve()
     {
-        if ($_ENV['CSRF_PROTECTION'] == 'true') {
-            self::$route->check_csrf();
+        if ($_ENV['CSRF_PROTECTION'] == 'true' && $this->request->getMethod() != 'get' && isset($_SERVER['HTTP_REFERER'])) {
+            $token = $this->request->all()->_token ?? null;
+            if (!$token || $token != Session::get('csrf-token')) {
+                $this->response->setStatusCode("403");
+                return $this->renderPage('/errors/general', [
+                    'code' => 403,
+                    'msg' => 'Access was denied',
+                ]);
+            }
         }
-        Session::remove('csrf_tokens');
 
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
         $ArrayParams = [];
+        $ArrayParams[] = $this->request;
 
         foreach (self::$regx as $route) {
             if (preg_match($route, urldecode($path), $url)) {
@@ -160,7 +182,10 @@ class Route
         }
 
         if (isset(self::$middlewareArr[$path]) && !is_null(self::$middlewareArr[$path])) {
-            middleware(self::$middlewareArr[$path]);
+            $next = middleware(self::$middlewareArr[$path]);
+            if ($next !== true) {
+                return $next;
+            }
         }
 
         if (isset(self::$routes[$method][$path])) {
@@ -176,11 +201,22 @@ class Route
             $method = $_POST['_METHOD'];
             $callback = self::$routes[$method][$path];
         } else {
+            foreach (self::$routes as $key => $val) {
+                foreach ($val as $key2 => $val2) {
+                    if ($key2 == $path) {
+                        $this->response->setStatusCode("405");
+                        return $this->renderPage('/errors/general', [
+                            'code' => 405,
+                            'msg' => 'Method Not Allowed',
+                            'method' => $key,
+                            'given_method' => $method
+                        ]);
+                    }
+                }
+            }
             $this->response->setStatusCode("404");
-            return $this->renderPage("/404/index");
+            return $this->renderPage("/errors/404");
         }
-
-        $ArrayParams[] = $this->request->params();
 
         if (is_callable($callback)) {
             return call_user_func_array($callback, $ArrayParams);
@@ -197,43 +233,71 @@ class Route
         return call_user_func_array($callback, $ArrayParams);
     }
 
-    public function renderPage(string $view, array $variables = null)
+    public function renderPage(string $view, array $variables = [])
     {
         $viewContent = self::viewContent($view, $variables);
         if (!is_null(self::$layout)) {
-            $layoutContent = self::layoutContent(self::$layout);
+            $layoutContent = self::viewContent(self::$layout);
             echo $layoutContent;
             self::$layout = null;
         }
         echo $viewContent;
     }
 
-    protected static function layoutContent(string $path)
+    protected static function viewContent(string $view, array $variables = [])
     {
-        ob_start();
-        include_once __DIR__ . "/../views/$path.php";
-        return ob_get_clean();
-    }
-
-    protected static function viewContent(string $view, array $variables = null)
-    {
-        $variables = $variables ?? [];
-        ob_start();
-        extract($variables);
-        include_once __DIR__ . "/../views/$view.php";
+        $con = file_get_contents("../views/$view.php");
+        self::templateEngine($con, $variables);
         return ob_get_clean();
     }
 
     public function showRoutes()
     {
         $temp = [];
-        foreach (self::$routes as $method => $route) {
+        foreach (self::$routesList as $method => $route) {
             $method = ($method == 'view') ? 'get' : $method;
             foreach ($route as $key => $val) {
-                $key = ltrim($key, $key[0]);
-                $temp[$method][] = str_replace(['\\', '/iu'], '', $key);
+                $temp[$method][] = $val;
             }
         }
-        dd($temp);
+        dd((object)$temp);
+    }
+
+    private static function templateEngine(string $str, array $variables = [])
+    {
+        ob_start();
+        extract($variables);
+        $pattern = [
+            '/\{\{([\w\(\)\'\"\/\,\$\[\]\-\.\=\>\< ]*)(?!\s)\}\}/',
+            '/\@if([\w\'\=\"\$\!\>\<\&\|\(\) ]*)(?!\s)\:/',
+            '/\@elseif([\w\'\=\"\$\!\>\<\&\|\(\) ]*)(?!\s)\:/',
+            '/\@else/',
+            '/\@endif/',
+            '/\@foreach([\w\=\$\>\'\"\[\]\(\) ]*)(?!\s)\:/',
+            '/\@endforeach/',
+            '/\@for([\w\=\$\>\<\&\|\!\'\"\;\,\[\]\(\)\+\- ]*)(?!\s)\:/',
+            '/\@endfor/',
+            '/\@php/',
+            '/\@endphp/',
+            '/@yield(.*)\)/',
+            '/\@([\w\(\'\/\"\,\$\.\- ]*)(?!\s)\)/'
+        ];
+        $replace = [
+            '<?= htmlspecialchars($1??"") ?>',
+            '<?php if$1{?>',
+            '<?php }elseif$1{?>',
+            '<?php }else{?>',
+            '<?php }?>',
+            '<?php foreach$1{?>',
+            '<?php }?>',
+            '<?php for$1{?>',
+            '<?php }?>',
+            '<?php ',
+            ' ?>',
+            '<?php _yield$1) ?>',
+            '<?php $1) ?>'
+        ];
+        $str = preg_replace($pattern, $replace, $str);
+        return eval(' ?>' . $str . '<?php ');
     }
 }

@@ -1,6 +1,8 @@
 {
-    "name": "samir_hussein/brackets",
+    "name": "samir-hussein/brackets",
     "type": "project",
+    "description": "The Brackets Framework.",
+    "keywords": ["framework", "brackets"],
     "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
@@ -14,7 +16,8 @@
         "psr-4": {
             "App\\": "core",
             "Controllers\\": "controllers",
-            "Models\\": "models"
+            "Models\\": "models",
+            "Migrations\\": "migrations"
         },
         "files": [
             "core/Helper_Functions.php",
@@ -31,12 +34,22 @@
         }
     },
     "require": {
+        "php": ">=7.4",
         "phpmailer/phpmailer": "dev-master",
         "vlucas/phpdotenv": "5.4.x-dev",
         "mongodb/mongodb": "v1.11.x-dev",
-        "symfony/console": "6.1.x-dev"
+        "symfony/console": "6.1.x-dev",
+        "mirazmac/dotenvwriter": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "9.5"
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php brackets key:generate"
+        ]
     }
 }

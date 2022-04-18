@@ -2,9 +2,8 @@
 
 namespace App;
 
-use App\Database\Schema;
+use App\Session;
 use App\Database\DataBase;
-use App\Database_Tables\Migrations;
 
 class Application
 {
@@ -17,9 +16,6 @@ class Application
     private $session;
     private $mail;
     private $db;
-    private $schema;
-    private $migrations;
-    private $visitors;
     private $paymob;
     private $TwoCheckOut;
 
@@ -32,11 +28,14 @@ class Application
         $this->session = new Session;
         $this->mail = new Mail();
 
+        $token = Session::get('csrf-token') ?? null;
+        if (!$token) {
+            $token = token(35);
+            Session::put('csrf-token', $token);
+        }
+
         if (!empty($_ENV['MySql_DBName'])) {
             $this->db = new DataBase();
-            $this->schema = new Schema();
-            $this->migrations = new Migrations();
-            $this->visitors = new Visitors();
         }
 
         if (!empty($_ENV['PayMob_User_Name'])) {

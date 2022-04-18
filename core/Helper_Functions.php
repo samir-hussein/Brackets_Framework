@@ -14,22 +14,28 @@ $request = new Request;
 $router = new Route($request, $response);
 $sessions = [];
 
-function response()
+function response(): Response
 {
     return $GLOBALS['response'];
 }
 
-function redirect(string $url, array $variables = null)
+function request(): Request
 {
-    if (!is_null($variables)) {
-        foreach ($variables as $key => $value) {
-            Session::flash($key, $value);
-        }
-    }
-    $GLOBALS['response']->redirect($url);
+    return $GLOBALS['request'];
 }
 
-function view(string $view, array $variables = null)
+function session(string $key)
+{
+    return Session::get($key);
+}
+
+function redirect(string $url): Response
+{
+    $GLOBALS['response']->redirect($url);
+    return $GLOBALS['response'];
+}
+
+function view(string $view, array $variables = [])
 {
     global $router;
     $router->renderPage($view, $variables);
@@ -47,33 +53,13 @@ function errors($input)
         return Validatore::errors()[$input];
 }
 
-function layout(string $layout)
-{
-    global $router;
-    $router::$layout = $layout;
-    return $router;
-}
-
-function title(string $title)
-{
-    global $router;
-    $router::$title = $title;
-    return $router;
-}
-
 function assets(string $path)
 {
     if (strpos($_SERVER['DOCUMENT_ROOT'], 'public') !== false) {
-        echo "/assets/$path";
+        return "/assets/$path";
     } else {
-        echo "/public/assets/$path";
+        return "/public/assets/$path";
     }
-}
-
-function showRoutes()
-{
-    global $router;
-    $router->showRoutes();
 }
 
 function public_path(string $path)
@@ -88,22 +74,18 @@ function public_path(string $path)
 function middleware(string $name)
 {
     $middleware = new run;
-    $middleware->run($name);
+    return $middleware->run($name);
+}
+
+function route(string $name, array|null $parameters = null)
+{
+    global $router;
+    return $router->getRouteByName($name, $parameters);
 }
 
 function flash($key)
 {
     return Session::getFlash($key);
-}
-
-function editRequest($key, $value)
-{
-    global $request;
-    $request = $request->params();
-    $request = (array)$request;
-    $request[$key] = $value;
-    $request = (object)$request;
-    return $request;
 }
 
 function addProperty($obj, $key, $value)
@@ -159,7 +141,7 @@ function _yield(string $name, string $value = null)
 {
     global $sessions;
     if (!is_null($value) && !isset($sessions[$name])) $sessions[$name] = $value;
-    return $sessions[$name] ?? null;
+    echo $sessions[$name] ?? null;
 }
 
 function extend(string $path)
@@ -168,14 +150,20 @@ function extend(string $path)
     $router->setLayout($path);
 }
 
+function showRoutes()
+{
+    global $router;
+    $router->showRoutes();
+}
+
 function config($property)
 {
     return $_ENV[$property];
 }
 
-function token()
+function token(int $length = 10)
 {
-    return sha1(bin2hex(random_bytes(10)));
+    return bin2hex(random_bytes($length));
 }
 
 function dd($variable)
@@ -185,7 +173,7 @@ function dd($variable)
         echo $variable;
         die;
     }
-    echo "<pre>";
+    echo "<pre style='background:black;padding:1%;color:#bf0000;margin:0;font-size:17px'>";
     var_dump($variable);
     echo "</pre>";
     die;
@@ -207,25 +195,25 @@ function is_json($string)
 function method(string $method)
 {
     $method = strtolower($method);
-    return "<input type='hidden' name='_METHOD' value='$method'>";
+    echo "<input type='hidden' name='_METHOD' value='$method'>";
 }
 
-function back(array $variables = null)
+function back(): Response
 {
-    if (!is_null($variables)) {
-        foreach ($variables as $key => $value) {
-            Session::flash($key, $value);
-        }
-    }
-
     if (isset($_SERVER['HTTP_REFERER']))
         header("location: " . $_SERVER['HTTP_REFERER']);
+
+    return $GLOBALS['response'];
 }
 
 function csrf()
 {
-    $token = token();
-    $_SESSION['csrf_tokens'][] = $token;
+    $token = Session::get('csrf-token');
 
-    echo "<input type='hidden' name='__token' value=$token>";
+    echo "<input type='hidden' name='_token' value=$token>";
+}
+
+function fetchFile(string $fileName)
+{
+    return include $fileName;
 }

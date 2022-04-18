@@ -2,7 +2,9 @@
 
 namespace App\middlewares;
 
+use App\Request;
+
 interface Middlewares
 {
-    public function boot();
+    public function boot(Request $request);
 }

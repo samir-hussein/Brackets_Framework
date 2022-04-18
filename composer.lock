@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07c6aa156f0cb4d9045226549eff8bde",
+    "content-hash": "66aefca418547628e9083fa8c96f72e2",
     "packages": [
         {
             "name": "graham-campbell/result-type",
@@ -130,6 +130,61 @@
             "time": "2022-03-16T16:31:34+00:00"
         },
         {
+            "name": "mirazmac/dotenvwriter",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MirazMac/DotEnvWriter.git",
+                "reference": "ee9528cc9916318edc17c9fe223995ca78908f9d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MirazMac/DotEnvWriter/zipball/ee9528cc9916318edc17c9fe223995ca78908f9d",
+                "reference": "ee9528cc9916318edc17c9fe223995ca78908f9d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6",
+                "vlucas/phpdotenv": "^5.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MirazMac\\DotEnv\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miraz Mac",
+                    "email": "mirazmac@gmail.com",
+                    "homepage": "https://mirazmac.com",
+                    "role": "Original Author"
+                }
+            ],
+            "description": "A PHP library to write values to .env (DotEnv) files",
+            "homepage": "https://mirazmac.com",
+            "keywords": [
+                "dot env",
+                "dot env writer",
+                "env",
+                "environment",
+                "variables"
+            ],
+            "support": {
+                "issues": "https://github.com/MirazMac/DotEnvWriter/issues",
+                "source": "https://github.com/MirazMac/DotEnvWriter/tree/master"
+            },
+            "time": "2021-10-19T06:55:38+00:00"
+        },
+        {
             "name": "mongodb/mongodb",
             "version": "v1.11.x-dev",
             "source": {
@@ -204,12 +259,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "0912769c6656fa5425a63323f25795dfe46a8197"
+                "reference": "bf99c202a92daa6d847bc346d554a4727fd802a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/0912769c6656fa5425a63323f25795dfe46a8197",
-                "reference": "0912769c6656fa5425a63323f25795dfe46a8197",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/bf99c202a92daa6d847bc346d554a4727fd802a5",
+                "reference": "bf99c202a92daa6d847bc346d554a4727fd802a5",
                 "shasum": ""
             },
             "require": {
@@ -275,7 +330,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-11T06:35:51+00:00"
+            "time": "2022-04-12T08:05:58+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -409,12 +464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "ca700c0d8c82b4129f1cb29b91ffc3fc7e31f62e"
+                "reference": "196c43b0e37be374a7d36ac3911682027fd8decd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/ca700c0d8c82b4129f1cb29b91ffc3fc7e31f62e",
-                "reference": "ca700c0d8c82b4129f1cb29b91ffc3fc7e31f62e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/196c43b0e37be374a7d36ac3911682027fd8decd",
+                "reference": "196c43b0e37be374a7d36ac3911682027fd8decd",
                 "shasum": ""
             },
             "require": {
@@ -497,7 +552,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-18T16:07:01+00:00"
+            "time": "2022-04-12T16:22:53+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -505,16 +560,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "893fd20d9ae41a0bae2b9cbdd581ac0cf3917de3"
+                "reference": "07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/893fd20d9ae41a0bae2b9cbdd581ac0cf3917de3",
-                "reference": "893fd20d9ae41a0bae2b9cbdd581ac0cf3917de3",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918",
+                "reference": "07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.1"
             },
             "default-branch": true,
             "type": "library",
@@ -565,7 +620,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-29T18:10:03+00:00"
+            "time": "2022-02-25T11:15:52+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -986,16 +1041,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "bc0a2247c72d29241b5a06fb60dc1c9d9acf2a3a"
+                "reference": "77ca81f6ddb67beb5202614c1b92faf27dca7661"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/bc0a2247c72d29241b5a06fb60dc1c9d9acf2a3a",
-                "reference": "bc0a2247c72d29241b5a06fb60dc1c9d9acf2a3a",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/77ca81f6ddb67beb5202614c1b92faf27dca7661",
+                "reference": "77ca81f6ddb67beb5202614c1b92faf27dca7661",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2",
+                "php": ">=8.1",
                 "psr/container": "^2.0"
             },
             "conflict": {
@@ -1061,7 +1116,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-29T18:10:03+00:00"
+            "time": "2022-03-13T20:11:47+00:00"
         },
         {
             "name": "symfony/string",
@@ -1069,12 +1124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "6e0bf37c9c4826549e1c601123aa9d1b36b4f36e"
+                "reference": "a462308f433bcf0433eed11b121463f51024837a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/6e0bf37c9c4826549e1c601123aa9d1b36b4f36e",
-                "reference": "6e0bf37c9c4826549e1c601123aa9d1b36b4f36e",
+                "url": "https://api.github.com/repos/symfony/string/zipball/a462308f433bcf0433eed11b121463f51024837a",
+                "reference": "a462308f433bcf0433eed11b121463f51024837a",
                 "shasum": ""
             },
             "require": {
@@ -1146,7 +1201,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-25T11:15:52+00:00"
+            "time": "2022-04-12T16:22:53+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -1595,12 +1650,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "21481a5c97e8332f7279e31219c32faa2da21c79"
+                "reference": "9455bde915e322a823d464a2c41e5c0de03512a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/21481a5c97e8332f7279e31219c32faa2da21c79",
-                "reference": "21481a5c97e8332f7279e31219c32faa2da21c79",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/9455bde915e322a823d464a2c41e5c0de03512a6",
+                "reference": "9455bde915e322a823d464a2c41e5c0de03512a6",
                 "shasum": ""
             },
             "require": {
@@ -1645,7 +1700,7 @@
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
                 "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/master"
             },
-            "time": "2021-12-27T22:36:43+00:00"
+            "time": "2022-04-02T20:16:01+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1694,7 +1749,7 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.x"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.6.1"
             },
             "time": "2022-03-15T21:29:03+00:00"
         },
@@ -1772,12 +1827,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "c46105173d72d632e3829add9f50aded1e702572"
+                "reference": "1586c6ac5c7a8f45a15de9bb8a8531ca9812fba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c46105173d72d632e3829add9f50aded1e702572",
-                "reference": "c46105173d72d632e3829add9f50aded1e702572",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1586c6ac5c7a8f45a15de9bb8a8531ca9812fba1",
+                "reference": "1586c6ac5c7a8f45a15de9bb8a8531ca9812fba1",
                 "shasum": ""
             },
             "require": {
@@ -1841,7 +1896,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-21T05:59:05+00:00"
+            "time": "2022-04-13T18:42:45+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2553,16 +2608,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "5.1.3",
+            "version": "5.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "388b6ced16caa751030f6a69e588299fa09200ac"
+                "reference": "3fade0c8462024d0426a00dc1ad0a2fda0df733f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/388b6ced16caa751030f6a69e588299fa09200ac",
-                "reference": "388b6ced16caa751030f6a69e588299fa09200ac",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/3fade0c8462024d0426a00dc1ad0a2fda0df733f",
+                "reference": "3fade0c8462024d0426a00dc1ad0a2fda0df733f",
                 "shasum": ""
             },
             "require": {
@@ -2604,7 +2659,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/environment/issues",
-                "source": "https://github.com/sebastianbergmann/environment/tree/5.1.3"
+                "source": "https://github.com/sebastianbergmann/environment/tree/5.1"
             },
             "funding": [
                 {
@@ -2612,7 +2667,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T05:52:38+00:00"
+            "time": "2022-04-14T11:24:33+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -2989,16 +3044,16 @@
         },
         {
             "name": "sebastian/resource-operations",
-            "version": "dev-master",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/resource-operations.git",
-                "reference": "0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8"
+                "reference": "0bb681ab112cdcd15dc71ea4ed7fb78e7060828b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/resource-operations/zipball/0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8",
-                "reference": "0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8",
+                "url": "https://api.github.com/repos/sebastianbergmann/resource-operations/zipball/0bb681ab112cdcd15dc71ea4ed7fb78e7060828b",
+                "reference": "0bb681ab112cdcd15dc71ea4ed7fb78e7060828b",
                 "shasum": ""
             },
             "require": {
@@ -3011,7 +3066,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-main": "3.0-dev"
                 }
             },
             "autoload": {
@@ -3032,7 +3087,7 @@
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
             "support": {
-                "source": "https://github.com/sebastianbergmann/resource-operations/tree/3.0.3"
+                "source": "https://github.com/sebastianbergmann/resource-operations/tree/main"
             },
             "funding": [
                 {
@@ -3040,7 +3095,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T06:45:17+00:00"
+            "time": "2022-04-11T13:39:05+00:00"
         },
         {
             "name": "sebastian/type",
@@ -3207,17 +3262,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "b419d648592b0b8911cbbe10d450fe314f4fd262"
+                "reference": "dc96b6775d038bfa31a240150ad8505bfb856c2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/b419d648592b0b8911cbbe10d450fe314f4fd262",
-                "reference": "b419d648592b0b8911cbbe10d450fe314f4fd262",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/dc96b6775d038bfa31a240150ad8505bfb856c2d",
+                "reference": "dc96b6775d038bfa31a240150ad8505bfb856c2d",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "symfony/polyfill-ctype": "^1.8"
+                "ext-ctype": "*",
+                "php": "^7.2 || ^8.0"
             },
             "conflict": {
                 "phpstan/phpstan": "<0.12.20",
@@ -3258,7 +3313,7 @@
                 "issues": "https://github.com/webmozarts/assert/issues",
                 "source": "https://github.com/webmozarts/assert/tree/master"
             },
-            "time": "2021-06-19T13:45:26+00:00"
+            "time": "2022-04-18T06:42:29+00:00"
         }
     ],
     "aliases": [],
@@ -3267,11 +3322,14 @@
         "phpmailer/phpmailer": 20,
         "vlucas/phpdotenv": 20,
         "mongodb/mongodb": 20,
-        "symfony/console": 20
+        "symfony/console": 20,
+        "mirazmac/dotenvwriter": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.4"
+    },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

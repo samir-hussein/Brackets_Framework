@@ -1,0 +1,71 @@
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:48:40 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:50:42 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type int in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 14:50:42 Europe/Berlin] PHP Deprecated:  ltrim(): Passing null to parameter #2 ($characters) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 242
+[16-Apr-2022 15:22:10 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:22:10 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:07 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:07 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:11 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:11 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:13 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:13 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(288) : eval()'d code on line 17
+[16-Apr-2022 15:24:40 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:40 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:41 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:54 Europe/Berlin] PHP Warning:  Undefined variable $x in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:24:54 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(289) : eval()'d code on line 17
+[16-Apr-2022 15:25:18 Europe/Berlin] PHP Warning:  Undefined array key "/\/test/iu" in D:\old_xampps\Brackets_Framework - Copy\core\Route.php on line 171
+[16-Apr-2022 15:35:00 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function {closure}(), 1 passed and exactly 2 expected in D:\old_xampps\Brackets_Framework - Copy\routes\web.php:8
+Stack trace:
+#0 [internal function]: {closure}(Object(App\Request))
+#1 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(216): call_user_func_array(Object(Closure), Array)
+#2 D:\old_xampps\Brackets_Framework - Copy\core\Application.php(54): App\Route->resolve()
+#3 D:\old_xampps\Brackets_Framework - Copy\public\index.php(22): App\Application->run()
+#4 {main}
+  thrown in D:\old_xampps\Brackets_Framework - Copy\routes\web.php on line 8
+[16-Apr-2022 15:35:47 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(295) : eval()'d code on line 15
+[17-Apr-2022 16:12:47 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function route(), 1 passed in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(301) : eval()'d code on line 15 and exactly 2 expected in D:\old_xampps\Brackets_Framework - Copy\core\Helper_Functions.php:98
+Stack trace:
+#0 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(301) : eval()'d code(15): route('test')
+#1 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(301): eval()
+#2 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(250): App\Route::templateEngine('<?php extend('l...', Array)
+#3 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(238): App\Route::viewContent('welcome', Array)
+#4 D:\old_xampps\Brackets_Framework - Copy\core\Helper_Functions.php(45): App\Route->renderPage('welcome', Array)
+#5 D:\old_xampps\Brackets_Framework - Copy\routes\web.php(18): view('welcome', Array)
+#6 [internal function]: {closure}(Object(App\Request))
+#7 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(222): call_user_func_array(Object(Closure), Array)
+#8 D:\old_xampps\Brackets_Framework - Copy\core\Application.php(54): App\Route->resolve()
+#9 D:\old_xampps\Brackets_Framework - Copy\public\index.php(22): App\Application->run()
+#10 {main}
+  thrown in D:\old_xampps\Brackets_Framework - Copy\core\Helper_Functions.php on line 98
+[17-Apr-2022 16:37:55 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: array_merge(): Argument #2 must be of type array, stdClass given in D:\old_xampps\Brackets_Framework - Copy\core\Request.php:32
+Stack trace:
+#0 D:\old_xampps\Brackets_Framework - Copy\core\Request.php(32): array_merge(Array, Object(stdClass))
+#1 D:\old_xampps\Brackets_Framework - Copy\routes\web.php(10): App\Request->all()
+#2 [internal function]: {closure}(Object(App\Request))
+#3 D:\old_xampps\Brackets_Framework - Copy\core\Route.php(222): call_user_func_array(Object(Closure), Array)
+#4 D:\old_xampps\Brackets_Framework - Copy\core\Application.php(54): App\Route->resolve()
+#5 D:\old_xampps\Brackets_Framework - Copy\public\index.php(22): App\Application->run()
+#6 {main}
+  thrown in D:\old_xampps\Brackets_Framework - Copy\core\Request.php on line 32
+[17-Apr-2022 16:39:11 Europe/Berlin] PHP Warning:  Undefined property: App\Request::$age in D:\old_xampps\Brackets_Framework - Copy\routes\web.php on line 11
+[17-Apr-2022 16:39:42 Europe/Berlin] PHP Warning:  Undefined property: App\Request::$age in D:\old_xampps\Brackets_Framework - Copy\routes\web.php on line 11
+[17-Apr-2022 16:40:39 Europe/Berlin] PHP Warning:  Undefined property: App\Request::$age in D:\old_xampps\Brackets_Framework - Copy\routes\web.php on line 9
+[17-Apr-2022 16:55:55 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(301) : eval()'d code on line 14
+[17-Apr-2022 16:56:18 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in D:\old_xampps\Brackets_Framework - Copy\core\Route.php(301) : eval()'d code on line 14

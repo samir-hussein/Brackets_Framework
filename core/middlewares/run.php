@@ -2,22 +2,23 @@
 
 namespace App\middlewares;
 
+use App\Request;
+
 class run
 {
-    private $providers;
+    private $middlewares;
+    private $request;
 
     public function __construct()
     {
-        $this->providers = [
-            'auth' => new Authentication,
-            'guest' => new Guest,
-            'verifed' => new Verifed,
-        ];
+        $this->request = new Request;
+
+        $this->middlewares = fetchFile('middlewares/kernel.php')['middlewares'];
     }
 
     public function run(string $name)
     {
-        $middleware = $this->providers[$name];
-        $middleware->boot();
+        $middleware = new $this->middlewares[$name];
+        return $middleware->boot($this->request);
     }
 }

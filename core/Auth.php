@@ -7,16 +7,26 @@ use App\Database\DataBase;
 class Auth
 {
     private static $table;
+    private static $remember;
 
     public static function guard(string $name)
     {
-        self::$table = $name ?? null;
+        $guard = fetchFile('../config/auth.php')['guards'][$name];
+        self::$table = $guard['table'];
+        self::$remember = $guard['remember'] ?? (60 * 60 * 24 * 30);
         return new Auth;
     }
 
     public static function attempt(array $userInfo, bool $remember = null)
     {
-        $table = self::$table ?? 'users';
+        $table = self::$table;
+        if (!self::$table) {
+            $defaults = fetchFile('../config/auth.php')['defaults']['guard'];
+            $guard = fetchFile('../config/auth.php')['guards'][$defaults];
+            self::$table = $guard['table'];
+            self::$remember = $guard['remember'] ?? (60 * 60 * 24 * 30);
+        }
+
         $sql = "SELECT * FROM $table WHERE email=:email";
         $value = ['email' => $userInfo['email']];
         if ($result = DataBase::prepare($sql, $value)) {
@@ -24,19 +34,19 @@ class Auth
                 if (password_verify($userInfo['password'], $row->password)) {
                     $row = (array) $row;
                     unset($row['password']);
-                    Session::set('user', array_keys($row));
+                    Session::put('user', array_keys($row));
                     foreach ($row as $key => $value) {
                         if ($key != 'password') {
-                            Session::set($key, $value);
+                            Session::put($key, $value);
                         }
                     }
                     if ($remember == true) {
                         foreach ($row as $key => $value) {
                             if ($key != 'password') {
-                                Cookies::set($key, $value, (86400 * 30));
+                                Cookies::set($key, $value, (self::$remember));
                             }
                         }
-                        Cookies::set('remember_user', json_encode($row), (86400 * 30));
+                        Cookies::set('remember_user', json_encode($row), (self::$remember));
                     }
                     return true;
                 } else {
@@ -74,9 +84,9 @@ class Auth
             } else {
                 $user = array_keys(json_decode(Cookies::get('remember_user'), true));
                 foreach ($user as $value) {
-                    Session::set($value, Cookies::get($value));
+                    Session::put($value, Cookies::get($value));
                 }
-                Session::set('user', $user);
+                Session::put('user', $user);
                 return true;
             }
         } else {

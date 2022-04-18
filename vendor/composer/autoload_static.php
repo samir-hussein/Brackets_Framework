@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit7fe35f1a4a0a4cf28f7009953ecf0955
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -17,9 +17,9 @@ class ComposerStaticInit7fe35f1a4a0a4cf28f7009953ecf0955
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '3a37ebac017bc098e9a86b35401e7a68' => __DIR__ . '/..' . '/mongodb/mongodb/src/functions.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
-        'bfef5f4de139a720ab8f3eed077633a9' => __DIR__ . '/../..' . '/core/Helper_Functions.php',
-        '3f1e9b43852d78938e1c3c7c0fe8b12d' => __DIR__ . '/../..' . '/routes/web.php',
-        '0ee491f453e86830b1cf7c190198c05a' => __DIR__ . '/../..' . '/routes/api.php',
+        '3569ad34158e0c29f178113a1096f818' => __DIR__ . '/../..' . '/core/Helper_Functions.php',
+        '6c566b2c918fa87eba413e5fa9650ec0' => __DIR__ . '/../..' . '/routes/web.php',
+        '3618c04df0adf412c8e220850db91115' => __DIR__ . '/../..' . '/routes/api.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -58,6 +58,8 @@ class ComposerStaticInit7fe35f1a4a0a4cf28f7009953ecf0955
         array (
             'MongoDB\\' => 8,
             'Models\\' => 7,
+            'MirazMac\\DotEnv\\' => 16,
+            'Migrations\\' => 11,
         ),
         'J' => 
         array (
@@ -158,6 +160,14 @@ class ComposerStaticInit7fe35f1a4a0a4cf28f7009953ecf0955
         array (
             0 => __DIR__ . '/../..' . '/models',
         ),
+        'MirazMac\\DotEnv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mirazmac/dotenvwriter/src',
+        ),
+        'Migrations\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/migrations',
+        ),
         'Jean85\\' => 
         array (
             0 => __DIR__ . '/..' . '/jean85/pretty-package-versions/src',
@@ -190,7 +200,11 @@ class ComposerStaticInit7fe35f1a4a0a4cf28f7009953ecf0955
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Commands\\AppKey' => __DIR__ . '/../..' . '/Commands/AppKey.php',
+        'Commands\\ClearLog' => __DIR__ . '/../..' . '/Commands/ClearLog.php',
         'Commands\\ControllerCommand' => __DIR__ . '/../..' . '/Commands/ControllerCommand.php',
+        'Commands\\JWTSecret' => __DIR__ . '/../..' . '/Commands/JWTSecret.php',
+        'Commands\\MigrateCommand' => __DIR__ . '/../..' . '/Commands/MigrateCommand.php',
         'Commands\\MigrationCommand' => __DIR__ . '/../..' . '/Commands/MigrationCommand.php',
         'Commands\\ModelCommand' => __DIR__ . '/../..' . '/Commands/ModelCommand.php',
         'Commands\\ServeCommand' => __DIR__ . '/../..' . '/Commands/ServeCommand.php',
