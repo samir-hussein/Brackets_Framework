@@ -1,3 +1,3 @@
 # Brackets Framework
 
-## [Documentation](https://www.genome.gov/)
+## [Check Documentation Here](https://samir-hussein.github.io/documentation/)
